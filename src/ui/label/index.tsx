@@ -1,11 +1,16 @@
 import styles from "./index.module.css";
+import { HTMLAttributes } from "react";
 
-interface ISpan {
-  name: "IF" | "THEN" | "ELSE";
+interface ISpanProps extends HTMLAttributes<HTMLSpanElement> {
+  text: "IF" | "THEN" | "ELSE";
 }
 
-const Span = ({ name }: ISpan) => {
-  return <span className={styles.span}>{name}</span>;
+const Span = ({ text, ...props }: ISpanProps) => {
+  return (
+    <span className={styles.span} {...props}>
+      {text}
+    </span>
+  );
 };
 
 export default Span;
