@@ -1,0 +1,9 @@
+.bold {
+  font-weight: 700;
+}
+
+.button {
+  height: 53px;
+  border-radius: 10px;
+  background-image: linear-gradient(#f3f3f3, #bfbfbf);
+}
