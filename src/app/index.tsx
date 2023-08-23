@@ -1,6 +1,5 @@
 import styles from "./index.module.css";
-import { ButtonOfCondition } from "../ui/button";
-import Icon from "../ui/icons";
+import { ControlButton } from "../ui/button";
 import Span from "../ui/span";
 
 function App() {
@@ -9,7 +8,7 @@ function App() {
     <div className="App">
       <h1>Новое приложение</h1>
       <Span text="IF" />
-      <ButtonOfCondition onClick={() => {}} />
+      <ControlButton onClick={() => {}} text="Save" />
     </div>
   );
 }
