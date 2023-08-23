@@ -2,7 +2,7 @@ import { HTMLAttributes } from "react";
 import styles from "./button.module.css";
 
 interface IButtonProps extends HTMLAttributes<HTMLButtonElement> {
-  text: string;
+  text: string | JSX.Element;
   icon?: JSX.Element;
   onClick: () => void;
   externalStyles?: string;
