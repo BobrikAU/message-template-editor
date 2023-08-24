@@ -6,9 +6,16 @@ interface ITextareaProps extends HTMLAttributes<HTMLTextAreaElement> {
   value: string;
   changeHandler: () => void;
   name: string;
+  externalStyles?: string;
 }
 
-const Textarea = ({ name, value, changeHandler, ...props }: ITextareaProps) => {
+const Textarea = ({
+  name,
+  value,
+  changeHandler,
+  externalStyles,
+  ...props
+}: ITextareaProps) => {
   const [textareaValue, setTextareaValue] = useState(value);
 
   function onInput(e: React.FormEvent<HTMLTextAreaElement>) {
@@ -25,7 +32,7 @@ const Textarea = ({ name, value, changeHandler, ...props }: ITextareaProps) => {
       rows={1}
       onInput={(e) => onInput(e)}
       onChange={changeHandler}
-      className={styles.textarea}
+      className={`${styles.textarea} ${externalStyles && externalStyles}`}
       {...props}
     ></textarea>
   );

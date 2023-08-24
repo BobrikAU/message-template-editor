@@ -3,11 +3,15 @@ import { HTMLAttributes } from "react";
 
 interface ISpanProps extends HTMLAttributes<HTMLSpanElement> {
   text: "IF" | "THEN" | "ELSE";
+  externalStyles?: string;
 }
 
-const Span = ({ text, ...props }: ISpanProps) => {
+const Span = ({ text, externalStyles, ...props }: ISpanProps) => {
   return (
-    <span className={styles.span} {...props}>
+    <span
+      className={`${styles.span} ${externalStyles && externalStyles}`}
+      {...props}
+    >
       {text}
     </span>
   );

@@ -1,0 +1,51 @@
+.container {
+  width: 100%;
+  display: grid;
+  grid-template-rows: repeat(5, auto);
+  grid-template-columns: 100px 110px 1fr;
+  row-gap: 20px;
+  grid-template-areas:
+    "topText topText topText"
+    "if delete condition"
+    "then . textThen"
+    "else . textElse"
+    "downText downText downText";
+  justify-items: start;
+  align-items: start;
+}
+
+.topText {
+  grid-area: topText;
+}
+
+.condition {
+  grid-area: if;
+}
+
+.buttonDelete {
+  grid-area: delete;
+}
+
+.conditionText {
+  grid-area: condition;
+}
+
+.then {
+  grid-area: then;
+}
+
+.thenText {
+  grid-area: textThen;
+}
+
+.else {
+  grid-area: else;
+}
+
+.elseText {
+  grid-area: textElse;
+}
+
+.downText {
+  grid-area: downText;
+}
