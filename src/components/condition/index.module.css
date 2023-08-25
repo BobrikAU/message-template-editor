@@ -5,17 +5,17 @@
   grid-template-columns: 100px 110px 1fr;
   row-gap: 20px;
   grid-template-areas:
-    "topText topText topText"
+    "topPart topPart topPart"
     "if delete condition"
-    "then . textThen"
-    "else . textElse"
-    "downText downText downText";
+    "then . partThen"
+    "else . partElse"
+    "downPart downPart downPart";
   justify-items: start;
   align-items: start;
 }
 
-.topText {
-  grid-area: topText;
+.topPart {
+  grid-area: topPart;
 }
 
 .condition {
@@ -34,18 +34,18 @@
   grid-area: then;
 }
 
-.thenText {
-  grid-area: textThen;
+.thenPart {
+  grid-area: partThen;
 }
 
 .else {
   grid-area: else;
 }
 
-.elseText {
-  grid-area: textElse;
+.elsePart {
+  grid-area: partElse;
 }
 
-.downText {
-  grid-area: downText;
+.downPart {
+  grid-area: downPart;
 }

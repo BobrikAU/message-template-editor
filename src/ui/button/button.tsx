@@ -8,6 +8,11 @@ interface IButtonProps extends HTMLAttributes<HTMLButtonElement> {
   externalStyles?: string;
 }
 
+/**
+ * Данный функциональны компонент используется как инструмент для создания в дальнейшем стилизованных
+ * необходимых образом кнопок
+ */
+
 const Button = ({ text, icon, externalStyles, ...props }: IButtonProps) => {
   return (
     <button

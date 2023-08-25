@@ -7,6 +7,9 @@ interface IButtonDeleteProps {
   externalStyles?: string;
 }
 
+/**
+ * Настоящий компонент - это кнопка удаления подвижета условного ветвления IF-THEN-ELSE
+ */
 const ButtonDelete = ({ onClick, externalStyles }: IButtonDeleteProps) => (
   <Button
     icon={<Icon type="trashBasket" width="15" height="15" />}

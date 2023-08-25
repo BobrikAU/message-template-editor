@@ -6,6 +6,9 @@ interface IButtonOfConditionProps {
   onClick: () => void;
 }
 
+/**
+ * Данный компонент - кнопка для вставки подвиджета условного ветвления IF-THEN-ELSE
+ */
 const ButtonOfCondition = ({ onClick }: IButtonOfConditionProps) => {
   const text = (
     <span>
