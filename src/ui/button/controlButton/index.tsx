@@ -6,7 +6,11 @@ interface IControlButtonProps {
   text: "Preview" | "Save" | "Close";
   onClick: () => void;
 }
-
+/**
+ * Данный функциональный компонент используется для рендеринга кнопок панели уплавления виджета
+ * редактирования шаблона (открытие виджета предпросмотра шаблона сообщений, сохранение шаблона
+ * сообщений и закрытия редактора)
+ */
 const ControlButton = ({ onClick, text }: IControlButtonProps) => {
   let icon = <></>;
   switch (text) {

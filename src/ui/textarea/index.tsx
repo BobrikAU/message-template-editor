@@ -6,11 +6,26 @@ interface ITextareaProps extends HTMLAttributes<HTMLTextAreaElement> {
   value: string;
   changeHandler: () => void;
   name: string;
+  externalStyles?: string;
 }
 
-const Textarea = ({ name, value, changeHandler, ...props }: ITextareaProps) => {
+/**
+ * Данный элемент используется как поле, в котором пользователь набирает текст и где он вставляет
+ * переменные
+ */
+
+const Textarea = ({
+  name,
+  value,
+  changeHandler,
+  externalStyles,
+  ...props
+}: ITextareaProps) => {
+  // сосотояние поля value
   const [textareaValue, setTextareaValue] = useState(value);
 
+  // обработчик события input, обеспечивающий обновление значения value и подбор высоты поля,
+  // которая позволяет избежать появление вертикального скрола
   function onInput(e: React.FormEvent<HTMLTextAreaElement>) {
     const element = e.target as HTMLTextAreaElement;
     element.style.height = "min-content";
@@ -25,7 +40,7 @@ const Textarea = ({ name, value, changeHandler, ...props }: ITextareaProps) => {
       rows={1}
       onInput={(e) => onInput(e)}
       onChange={changeHandler}
-      className={styles.textarea}
+      className={`${styles.textarea} ${externalStyles && externalStyles}`}
       {...props}
     ></textarea>
   );

@@ -6,6 +6,10 @@ interface IButtonWithVariableProps {
   onClick: () => void;
 }
 
+/**
+ * Настоящий компонент используется для рендеринга кнопок с именами переменных. Имена переменных
+ * получаются через пропс text.
+ */
 const ButtonWithVariable = ({
   text,
   onClick,
