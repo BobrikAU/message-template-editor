@@ -4,12 +4,16 @@ import Span from "../../span";
 
 interface IButtonOfConditionProps {
   onClick: () => void;
+  externalStyles?: string;
 }
 
 /**
  * Данный компонент - кнопка для вставки подвиджета условного ветвления IF-THEN-ELSE
  */
-const ButtonOfCondition = ({ onClick }: IButtonOfConditionProps) => {
+const ButtonOfCondition = ({
+  onClick,
+  externalStyles,
+}: IButtonOfConditionProps) => {
   const text = (
     <span>
       <span className={styles.bold}>Click to add</span>: <Span text="IF" />{" "}
@@ -18,7 +22,11 @@ const ButtonOfCondition = ({ onClick }: IButtonOfConditionProps) => {
     </span>
   );
   return (
-    <Button text={text} onClick={onClick} externalStyles={styles.button} />
+    <Button
+      text={text}
+      onClick={onClick}
+      externalStyles={`${styles.button} ${externalStyles}`}
+    />
   );
 };
 
