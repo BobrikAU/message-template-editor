@@ -4,7 +4,7 @@ import styles from "./index.module.css";
 
 interface ITextareaProps extends HTMLAttributes<HTMLTextAreaElement> {
   value: string;
-  changeHandler: () => void;
+  changeHandler: (e: React.FormEvent<HTMLTextAreaElement>) => void;
   name: string;
   externalStyles?: string;
 }
@@ -21,25 +21,21 @@ const Textarea = ({
   externalStyles,
   ...props
 }: ITextareaProps) => {
-  // сосотояние поля value
-  const [textareaValue, setTextareaValue] = useState(value);
-
   // обработчик события input, обеспечивающий обновление значения value и подбор высоты поля,
   // которая позволяет избежать появление вертикального скрола
   function onInput(e: React.FormEvent<HTMLTextAreaElement>) {
     const element = e.target as HTMLTextAreaElement;
     element.style.height = "min-content";
     element.style.height = `${element.scrollHeight - 14}px`;
-    setTextareaValue(element.value);
+    changeHandler(e);
   }
 
   return (
     <textarea
       name={name}
-      value={textareaValue}
+      value={value}
       rows={1}
-      onInput={(e) => onInput(e)}
-      onChange={changeHandler}
+      onInput={onInput}
       className={`${styles.textarea} ${externalStyles && externalStyles}`}
       {...props}
     ></textarea>
