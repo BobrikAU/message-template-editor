@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, MouseEvent } from "react";
 import { nanoid } from "nanoid";
 import styles from "./index.module.css";
 import { ButtonWithVariable, ButtonOfCondition } from "../../ui/button";
@@ -19,21 +19,64 @@ const TemplateEditor = ({ arrVarNames, template }: ITemplateEditorProps) => {
       next: null,
     },
   });
+  const updateCurrentTemplate = (nameTextarea: string, newValue: string) => {
+    const newCcurrentTemplate = structuredClone(currentTemplate);
+    newCcurrentTemplate[nameTextarea].value = newValue;
+    setCcurrentTemplate(newCcurrentTemplate);
+    console.log(newCcurrentTemplate);
+  };
+
+  // счетчик для установления уникальных имен для текстовых полей
   const [ordinal, setOrdinal] = useState(1);
+
+  // добавление переменных при нажатии на кнопку
+  const handleDownButtonWithVariable = (
+    e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
+  ) => {
+    const elementWithFocus = document.activeElement;
+    const textButton = e.currentTarget.textContent;
+    if (textButton) {
+      if (elementWithFocus && elementWithFocus.tagName === "TEXTAREA") {
+        const textareatWithFocus =
+          document.activeElement as HTMLTextAreaElement;
+        const start = textareatWithFocus.selectionStart;
+        const end = textareatWithFocus.selectionEnd;
+        setTimeout(() => {
+          textareatWithFocus.focus();
+          textareatWithFocus.setRangeText(textButton, start, end, "end");
+          updateCurrentTemplate(
+            textareatWithFocus.name,
+            textareatWithFocus.value
+          );
+        });
+      } else if (
+        elementWithFocus === null ||
+        elementWithFocus.tagName !== "TEXTAREA"
+      ) {
+        const firstTextarea = document.querySelector("textarea");
+        if (firstTextarea) {
+          firstTextarea.setRangeText(textButton, 0, 0, "end");
+          updateCurrentTemplate(firstTextarea.name, firstTextarea.value);
+        }
+      }
+    }
+  };
 
   // формирование кнопок с переменными
   const buttonsWithVariables = arrVarNames.map((item) => (
-    <ButtonWithVariable text={item} onClick={() => {}} key={nanoid()} />
+    <ButtonWithVariable
+      text={`{${item}}`}
+      onMouseDown={handleDownButtonWithVariable}
+      key={nanoid()}
+    />
   ));
 
   const handleChangeTextarea = (e: React.FormEvent<HTMLTextAreaElement>) => {
     const nameTextarea = e.currentTarget.name;
-    const newCcurrentTemplate = structuredClone(currentTemplate);
-    newCcurrentTemplate[nameTextarea].value = e.currentTarget.value;
-    setCcurrentTemplate(newCcurrentTemplate);
-    //console.log(newCcurrentTemplate);
+    updateCurrentTemplate(nameTextarea, e.currentTarget.value);
   };
 
+  // формирование редактора сообщения
   const makeTemplateMarkup = () => {
     if (template === null) {
       return (
