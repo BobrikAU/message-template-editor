@@ -1,6 +1,5 @@
 import styles from "./index.module.css";
 import TemplateEditor from "../components/templateEditor";
-import Condition from "../components/condition";
 import { IMessage } from "../components/messageData";
 
 function App() {

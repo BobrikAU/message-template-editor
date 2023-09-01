@@ -3,7 +3,7 @@ import Button from "../button";
 import Span from "../../span";
 
 interface IButtonOfConditionProps {
-  onClick: () => void;
+  onMouseDown: () => void;
   externalStyles?: string;
 }
 
@@ -11,7 +11,7 @@ interface IButtonOfConditionProps {
  * Данный компонент - кнопка для вставки подвиджета условного ветвления IF-THEN-ELSE
  */
 const ButtonOfCondition = ({
-  onClick,
+  onMouseDown,
   externalStyles,
 }: IButtonOfConditionProps) => {
   const text = (
@@ -24,7 +24,7 @@ const ButtonOfCondition = ({
   return (
     <Button
       text={text}
-      onClick={onClick}
+      onMouseDown={onMouseDown}
       externalStyles={`${styles.button} ${externalStyles}`}
     />
   );
