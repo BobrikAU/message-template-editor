@@ -13,76 +13,17 @@ interface ITemplateEditorProps {
 }
 
 const TemplateEditor = ({ arrVarNames, template }: ITemplateEditorProps) => {
+  const initialDataTextarea = {
+    value: "",
+    if: null,
+    next: null,
+  };
   // состояние с данными о шаблоне
   const [currentTemplate, setCcurrentTemplate] = useState<IMessage>(
     template
       ? template
       : {
-          beginning: {
-            value: "bbb",
-            if: ["1", "2", "3"],
-            next: "4",
-          },
-          "1": {
-            value: "111",
-            if: null,
-            next: null,
-          },
-          "2": {
-            value: "222",
-            if: ["5", "6", "7"],
-            next: "8",
-          },
-          "3": {
-            value: "333",
-            if: null,
-            next: null,
-          },
-          "4": {
-            value: "444",
-            if: null,
-            next: null,
-          },
-          "5": {
-            value: "555",
-            if: null,
-            next: null,
-          },
-          "6": {
-            value: "666",
-            if: null,
-            next: null,
-          },
-          "7": {
-            value: "777",
-            if: ["9", "10", "11"],
-            next: "12",
-          },
-          "8": {
-            value: "888",
-            if: null,
-            next: null,
-          },
-          "9": {
-            value: "999",
-            if: null,
-            next: null,
-          },
-          "10": {
-            value: "101010",
-            if: null,
-            next: null,
-          },
-          "11": {
-            value: "111111",
-            if: null,
-            next: null,
-          },
-          "12": {
-            value: "121212",
-            if: null,
-            next: null,
-          },
+          beginning: { ...initialDataTextarea },
         }
   );
   // обновление данных при изменении содержания тестовых полей
@@ -90,16 +31,15 @@ const TemplateEditor = ({ arrVarNames, template }: ITemplateEditorProps) => {
     nameTextarea: string,
     newValue: string
   ) => {
-    const newCcurrentTemplate = structuredClone(currentTemplate);
+    const newCcurrentTemplate = { ...currentTemplate };
     newCcurrentTemplate[nameTextarea].value = newValue;
     setCcurrentTemplate(newCcurrentTemplate);
-    // console.log(newCcurrentTemplate);
   };
 
   // счетчик для установления уникальных имен для текстовых полей
   const refOrdinal = useRef(0);
   const getNewName = () => {
-    refOrdinal.current += refOrdinal.current;
+    refOrdinal.current++;
     return refOrdinal.current;
   };
 
@@ -145,9 +85,9 @@ const TemplateEditor = ({ arrVarNames, template }: ITemplateEditorProps) => {
     />
   ));
 
+  // обновление значения текстовых полей при их редактировании
   const handleChangeTextarea = (e: React.FormEvent<HTMLTextAreaElement>) => {
-    const nameTextarea = e.currentTarget.name;
-    updateCurrentTemplateValue(nameTextarea, e.currentTarget.value);
+    updateCurrentTemplateValue(e.currentTarget.name, e.currentTarget.value);
   };
 
   // формирование редактора сообщения
@@ -158,7 +98,7 @@ const TemplateEditor = ({ arrVarNames, template }: ITemplateEditorProps) => {
       : [null, null, null];
     const nameNext = currentTemplate[dataName].next;
     const templateMarkup: JSX.Element = (
-      <div className={styles.templateMarkup}>
+      <>
         <Textarea
           name={dataName}
           value={currentTemplate[dataName].value}
@@ -191,31 +131,54 @@ const TemplateEditor = ({ arrVarNames, template }: ITemplateEditorProps) => {
           </div>
         )}
         {nameNext && makeTemplateMarkup(nameNext)}
-      </div>
+      </>
     );
     return templateMarkup;
   };
 
-  // const handleClickButtonOfCondition = () => {
-  //   const elementWithFocus = document.activeElement;
-  //   if (elementWithFocus && elementWithFocus.tagName === "TEXTAREA") {
-  //     const textareatWithFocus = document.activeElement as HTMLTextAreaElement;
-  //     const nameOfTextareatWithFocus = textareatWithFocus.name;
-  //     const dataOfTextareatWithFocus = currentTemplate[nameOfTextareatWithFocus];
-  //     const newDataOfTextareatWithFocus: IString = {
-  //       value: '',
-  //       if: [String(getNewName()), String(getNewName()), String(getNewName())],
-  //       next: String(getNewName()),
-  //     };
-  //   }
-  // };
+  const handleClickButtonOfCondition = () => {
+    const elementWithFocus = document.activeElement;
+    if (elementWithFocus && elementWithFocus.tagName === "TEXTAREA") {
+      // определяем текстовое поле, на котором будет условное ветвление, и его имя
+      const textareaWithFocus = document.activeElement as HTMLTextAreaElement;
+      const nameOfTextareaWithFocus = textareaWithFocus.name;
+      // распределяем тескт по вновь создаваемым полям
+      const selectionStart = textareaWithFocus.selectionStart;
+      const topValue = textareaWithFocus.value.slice(0, selectionStart);
+      const bottomValue = textareaWithFocus.value.slice(selectionStart);
+      // определяем имена новых полей
+      const nameIf = String(getNewName());
+      const nameThen = String(getNewName());
+      const nameElse = String(getNewName());
+      const nameNext = String(getNewName());
+      // формирование данных о верхней и нижнем текстовых полях
+      const dataOfTopTextarea: IString = {
+        value: topValue,
+        if: [nameIf, nameThen, nameElse],
+        next: nameNext,
+      };
+      const dataOfBottomTextarea: IString = {
+        value: bottomValue,
+        if: currentTemplate[nameOfTextareaWithFocus].if,
+        next: currentTemplate[nameOfTextareaWithFocus].next,
+      };
+
+      const newCurrentTemplate = structuredClone(currentTemplate);
+      newCurrentTemplate[nameOfTextareaWithFocus] = dataOfTopTextarea;
+      newCurrentTemplate[nameIf] = { ...initialDataTextarea };
+      newCurrentTemplate[nameThen] = { ...initialDataTextarea };
+      newCurrentTemplate[nameElse] = { ...initialDataTextarea };
+      newCurrentTemplate[nameNext] = dataOfBottomTextarea;
+      setCcurrentTemplate(newCurrentTemplate);
+    }
+  };
 
   return (
     <section>
       <h1 className={styles.head}>Message Template Editor</h1>
       <div className={styles.buttonsContainer}>{buttonsWithVariables}</div>
       <ButtonOfCondition
-        onMouseDown={() => {}}
+        onMouseDown={handleClickButtonOfCondition}
         externalStyles={styles.buttonCondition}
       />
       <div className={styles.tamplate}>{makeTemplateMarkup("beginning")}</div>
