@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, Dispatch } from "react";
 import { nanoid } from "nanoid";
 import styles from "./index.module.css";
 import { ButtonWithVariable, ButtonOfCondition } from "../../ui/button";
@@ -15,9 +15,16 @@ import { handleClickButtonOfCondition } from "./libs/handlerClickButtonOfConditi
 interface ITemplateEditorProps {
   arrVarNames: string[];
   template?: IMessage | null;
+  setStep?: Dispatch<React.SetStateAction<number>>;
+  callbackSave: (currentTemplate: IMessage) => void;
 }
 
-const TemplateEditor = ({ arrVarNames, template }: ITemplateEditorProps) => {
+const TemplateEditor = ({
+  arrVarNames,
+  template,
+  setStep,
+  callbackSave,
+}: ITemplateEditorProps) => {
   // для расчета высоты блока с шаблоном
   const headRef = useRef<HTMLHeadingElement>(null);
   const buttonsContainerRef = useRef<HTMLDivElement>(null);
@@ -155,12 +162,12 @@ const TemplateEditor = ({ arrVarNames, template }: ITemplateEditorProps) => {
         />
         <ControlButton
           text="Save"
-          onClick={() => {}}
+          onClick={() => callbackSave(currentTemplate)}
           externalStyles={styles.controlButton}
         />
         <ControlButton
           text="Close"
-          onClick={() => {}}
+          onClick={() => setStep && setStep(1)}
           externalStyles={styles.controlButton}
         />
       </div>

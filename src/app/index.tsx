@@ -11,12 +11,21 @@ function App() {
   const template: IMessage | null = localStorage.template
     ? JSON.parse(localStorage.template)
     : null;
+  const callbackSave = (currentTemplate: IMessage) => {
+    localStorage.template = JSON.stringify(currentTemplate);
+  };
+
   return (
     <div className="App">
       {step === 1 ? (
         <span>1</span>
       ) : step === 2 ? (
-        <TemplateEditor arrVarNames={arrVarNames} template={template} />
+        <TemplateEditor
+          arrVarNames={arrVarNames}
+          template={template}
+          setStep={setStep}
+          callbackSave={callbackSave}
+        />
       ) : (
         <span>3</span>
       )}
