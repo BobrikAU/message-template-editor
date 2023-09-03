@@ -4,7 +4,7 @@ import styles from "./button.module.css";
 interface IButtonProps extends HTMLAttributes<HTMLButtonElement> {
   text: string | JSX.Element;
   icon?: JSX.Element;
-  onClick?: () => void;
+  onClick?: (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => void;
   onMouseDown?: (
     e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
   ) => void;

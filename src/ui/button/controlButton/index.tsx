@@ -5,13 +5,18 @@ import Icon from "../../icons";
 interface IControlButtonProps {
   text: "Preview" | "Save" | "Close";
   onClick: () => void;
+  externalStyles?: string;
 }
 /**
  * Данный функциональный компонент используется для рендеринга кнопок панели уплавления виджета
  * редактирования шаблона (открытие виджета предпросмотра шаблона сообщений, сохранение шаблона
  * сообщений и закрытия редактора)
  */
-const ControlButton = ({ onClick, text }: IControlButtonProps) => {
+const ControlButton = ({
+  onClick,
+  text,
+  externalStyles,
+}: IControlButtonProps) => {
   let icon = <></>;
   switch (text) {
     case "Preview":
@@ -32,7 +37,7 @@ const ControlButton = ({ onClick, text }: IControlButtonProps) => {
       text={text}
       icon={icon}
       onClick={onClick}
-      externalStyles={styles.button}
+      externalStyles={`${styles.button} ${externalStyles}`}
     />
   );
 };

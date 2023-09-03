@@ -1,4 +1,4 @@
-import { useState, MouseEvent, useRef } from "react";
+import { useState, MouseEvent, useRef, MouseEventHandler } from "react";
 import { nanoid } from "nanoid";
 import styles from "./index.module.css";
 import { ButtonWithVariable, ButtonOfCondition } from "../../ui/button";
@@ -6,6 +6,7 @@ import Textarea from "../../ui/textarea";
 import { IMessage, IString } from "../messageData";
 import Span from "../../ui/span";
 import { ButtonDelete } from "../../ui/button";
+import { ControlButton } from "../../ui/button";
 
 interface ITemplateEditorProps {
   arrVarNames: string[];
@@ -90,6 +91,59 @@ const TemplateEditor = ({ arrVarNames, template }: ITemplateEditorProps) => {
     updateCurrentTemplateValue(e.currentTarget.name, e.currentTarget.value);
   };
 
+  // обработка клика на кнопку delete (удаление условного ветвления)
+  const hendleButtonDeleteClick = (
+    e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
+  ) => {
+    // получаем имя текстового поля, который над удаляемым условным ветвлением
+    const nameTopTextarea = (e.currentTarget as HTMLButtonElement).dataset.name;
+    if (nameTopTextarea) {
+      // получаем данные о текстовых полях над и под условным ветвлением
+      const dataTopTexatarea = currentTemplate[nameTopTextarea];
+      const dataBottomTextarea =
+        currentTemplate[dataTopTexatarea.next ? dataTopTexatarea.next : ""];
+      // формируем данные для текстового поля, который будет после удаления условного ветвления
+      const newDataTopTexatarea = {
+        ...dataBottomTextarea,
+        value: dataTopTexatarea.value + dataBottomTextarea.value,
+      };
+      // формируем список имён текстовых полей, данные о которых надо удалить
+      const setTextareaNamesToDelete = new Set<string>();
+      const fillSetTextareaNamesToDelete = (
+        data: IString,
+        next?: string | null
+      ) => {
+        const condition = data.if;
+        const nameBottomTextarea = data.next;
+        if (condition && nameBottomTextarea) {
+          setTextareaNamesToDelete.add(condition[0]);
+          fillSetTextareaNamesToDelete(currentTemplate[condition[0]], next);
+          setTextareaNamesToDelete.add(condition[1]);
+          fillSetTextareaNamesToDelete(currentTemplate[condition[1]], next);
+          setTextareaNamesToDelete.add(condition[2]);
+          fillSetTextareaNamesToDelete(currentTemplate[condition[2]], next);
+          setTextareaNamesToDelete.add(nameBottomTextarea);
+          if (next && data.next !== next) {
+            fillSetTextareaNamesToDelete(
+              currentTemplate[nameBottomTextarea],
+              next
+            );
+          }
+        }
+      };
+      fillSetTextareaNamesToDelete(dataTopTexatarea, dataTopTexatarea.next);
+      // формируем новые данные о шаблоне без удаленной части
+      const newCurrentTemplate = {
+        ...currentTemplate,
+        [nameTopTextarea]: newDataTopTexatarea,
+      };
+      setTextareaNamesToDelete.forEach((item) => {
+        delete newCurrentTemplate[item];
+      });
+      setCcurrentTemplate(newCurrentTemplate);
+    }
+  };
+
   // формирование редактора сообщения
   const makeTemplateMarkup = (dataName: string) => {
     const condition = currentTemplate[dataName].if;
@@ -101,15 +155,18 @@ const TemplateEditor = ({ arrVarNames, template }: ITemplateEditorProps) => {
       <>
         <Textarea
           name={dataName}
-          value={currentTemplate[dataName].value}
+          value={currentTemplate[dataName].value || dataName}
           changeHandler={handleChangeTextarea}
         />
-        {currentTemplate[dataName].if && (
-          <div className={styles.container}>
+        {condition && (
+          <div className={styles.containerConditions}>
             {/*часть, вычисляющая булевый результат условия, с текстом или блоком IF-THEN-ELSE*/}
             <div className={styles.conditionLabel}>
               <Span text="IF" externalStyles={styles.condition} />
-              <ButtonDelete onClick={() => {}} />
+              <ButtonDelete
+                dataTextareaName={dataName}
+                onClick={hendleButtonDeleteClick}
+              />
             </div>
             <div className={styles.conditionText}>
               {makeTemplateMarkup(nameIf ? nameIf : "")}
@@ -136,6 +193,7 @@ const TemplateEditor = ({ arrVarNames, template }: ITemplateEditorProps) => {
     return templateMarkup;
   };
 
+  // вставка условного ветвления при нажатии на соответствующую кнопку
   const handleClickButtonOfCondition = () => {
     const elementWithFocus = document.activeElement;
     if (elementWithFocus && elementWithFocus.tagName === "TEXTAREA") {
@@ -173,16 +231,59 @@ const TemplateEditor = ({ arrVarNames, template }: ITemplateEditorProps) => {
     }
   };
 
+  // определение высоты блока с разметкой шаблона
+  const headRef = useRef<HTMLHeadingElement>(null);
+  const buttonsContainerRef = useRef<HTMLDivElement>(null);
+  const buttonConditionRef = useRef<HTMLDivElement>(null);
+  const controlPanelRef = useRef<HTMLDivElement>(null);
+  if (
+    headRef.current &&
+    buttonsContainerRef.current &&
+    buttonConditionRef.current &&
+    controlPanelRef.current
+  ) {
+    const hhh =
+      window.innerHeight -
+      (headRef.current.clientHeight +
+        buttonsContainerRef.current.clientHeight +
+        buttonConditionRef.current.clientHeight +
+        controlPanelRef.current.clientHeight);
+    document.documentElement.style.setProperty(
+      "--heightOftemplate",
+      hhh + "px"
+    );
+  }
+
   return (
-    <section>
-      <h1 className={styles.head}>Message Template Editor</h1>
-      <div className={styles.buttonsContainer}>{buttonsWithVariables}</div>
-      <ButtonOfCondition
-        onMouseDown={handleClickButtonOfCondition}
-        externalStyles={styles.buttonCondition}
-      />
-      <div className={styles.tamplate}>{makeTemplateMarkup("beginning")}</div>
-    </section>
+    <main className={styles.templateEditor}>
+      <h1 className={styles.head} ref={headRef}>
+        Message Template Editor
+      </h1>
+      <div className={styles.buttonsContainer} ref={buttonsContainerRef}>
+        {buttonsWithVariables}
+      </div>
+      <div className={styles.buttonCondition} ref={buttonConditionRef}>
+        <ButtonOfCondition onMouseDown={handleClickButtonOfCondition} />
+      </div>
+      <div className={styles.template}>{makeTemplateMarkup("beginning")}</div>
+      <div className={styles.controlPanel} ref={controlPanelRef}>
+        <ControlButton
+          text="Preview"
+          onClick={() => {}}
+          externalStyles={styles.controlButton}
+        />
+        <ControlButton
+          text="Save"
+          onClick={() => {}}
+          externalStyles={styles.controlButton}
+        />
+        <ControlButton
+          text="Close"
+          onClick={() => {}}
+          externalStyles={styles.controlButton}
+        />
+      </div>
+    </main>
   );
 };
 
