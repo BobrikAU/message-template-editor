@@ -7,3 +7,7 @@
   border-radius: 10px;
   outline-color: gray;
 }
+
+.textarea:focus {
+  border-color: gray;
+}

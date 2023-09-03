@@ -1,11 +1,34 @@
+import { useState } from "react";
 import styles from "./index.module.css";
-import Condition from "../components/condition";
+import TemplateEditor from "../components/templateEditor";
+import { IMessage } from "../components/messageData";
 
 function App() {
+  const [step, setStep] = useState(2);
+  const arrVarNames: string[] = localStorage.arrVarNames
+    ? JSON.parse(localStorage.arrVarNames)
+    : ["firstname", "lastname", "company", "position"];
+  const template: IMessage | null = localStorage.template
+    ? JSON.parse(localStorage.template)
+    : null;
+  const callbackSave = (currentTemplate: IMessage) => {
+    localStorage.template = JSON.stringify(currentTemplate);
+  };
+
   return (
     <div className="App">
-      <h1>Новое приложение</h1>
-      <Condition />
+      {step === 1 ? (
+        <span>1</span>
+      ) : step === 2 ? (
+        <TemplateEditor
+          arrVarNames={arrVarNames}
+          template={template}
+          setStep={setStep}
+          callbackSave={callbackSave}
+        />
+      ) : (
+        <span>3</span>
+      )}
     </div>
   );
 }

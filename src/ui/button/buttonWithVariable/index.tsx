@@ -1,9 +1,12 @@
+import { MouseEvent } from "react";
 import styles from "./index.module.css";
 import Button from "../button";
 
 interface IButtonWithVariableProps {
   text: string;
-  onClick: () => void;
+  onMouseDown: (
+    e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
+  ) => void;
 }
 
 /**
@@ -12,12 +15,12 @@ interface IButtonWithVariableProps {
  */
 const ButtonWithVariable = ({
   text,
-  onClick,
+  onMouseDown,
   ...props
 }: IButtonWithVariableProps) => (
   <Button
     text={text}
-    onClick={onClick}
+    onMouseDown={onMouseDown}
     {...props}
     externalStyles={styles.button}
   />
