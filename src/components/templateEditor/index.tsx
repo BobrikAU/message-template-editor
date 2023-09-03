@@ -1,24 +1,29 @@
-import { useState, MouseEvent, useRef, MouseEventHandler } from "react";
+import { useState, useRef } from "react";
 import { nanoid } from "nanoid";
 import styles from "./index.module.css";
 import { ButtonWithVariable, ButtonOfCondition } from "../../ui/button";
 import Textarea from "../../ui/textarea";
-import { IMessage, IString } from "../messageData";
+import { IMessage, initialDataTextarea } from "../messageData";
 import Span from "../../ui/span";
 import { ButtonDelete } from "../../ui/button";
 import { ControlButton } from "../../ui/button";
+import { handleDownButtonWithVariable } from "./libs/handlerDownButtonWithVariable";
+import { handleButtonDeleteClick } from "./libs/handleButtonDeleteClick";
+import { determineHeightTemplateBlock } from "./libs/determiningHeightTemplateBlock";
+import { handleClickButtonOfCondition } from "./libs/handlerClickButtonOfCondition";
 
 interface ITemplateEditorProps {
   arrVarNames: string[];
-  template: IMessage | null;
+  template?: IMessage | null;
 }
 
 const TemplateEditor = ({ arrVarNames, template }: ITemplateEditorProps) => {
-  const initialDataTextarea = {
-    value: "",
-    if: null,
-    next: null,
-  };
+  // для расчета высоты блока с шаблоном
+  const headRef = useRef<HTMLHeadingElement>(null);
+  const buttonsContainerRef = useRef<HTMLDivElement>(null);
+  const buttonConditionRef = useRef<HTMLDivElement>(null);
+  const controlPanelRef = useRef<HTMLDivElement>(null);
+
   // состояние с данными о шаблоне
   const [currentTemplate, setCcurrentTemplate] = useState<IMessage>(
     template
@@ -36,6 +41,10 @@ const TemplateEditor = ({ arrVarNames, template }: ITemplateEditorProps) => {
     newCcurrentTemplate[nameTextarea].value = newValue;
     setCcurrentTemplate(newCcurrentTemplate);
   };
+  // обновление значения текстовых полей при их редактировании
+  const handleChangeTextarea = (e: React.FormEvent<HTMLTextAreaElement>) => {
+    updateCurrentTemplateValue(e.currentTarget.name, e.currentTarget.value);
+  };
 
   // счетчик для установления уникальных имен для текстовых полей
   const refOrdinal = useRef(0);
@@ -44,107 +53,18 @@ const TemplateEditor = ({ arrVarNames, template }: ITemplateEditorProps) => {
     return refOrdinal.current;
   };
 
-  // добавление переменных при нажатии на кнопку
-  const handleDownButtonWithVariable = (
-    e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
-  ) => {
-    const elementWithFocus = document.activeElement;
-    const textButton = e.currentTarget.textContent;
-    if (textButton) {
-      if (elementWithFocus && elementWithFocus.tagName === "TEXTAREA") {
-        const textareatWithFocus =
-          document.activeElement as HTMLTextAreaElement;
-        const start = textareatWithFocus.selectionStart;
-        const end = textareatWithFocus.selectionEnd;
-        setTimeout(() => {
-          textareatWithFocus.focus();
-          textareatWithFocus.setRangeText(textButton, start, end, "end");
-          updateCurrentTemplateValue(
-            textareatWithFocus.name,
-            textareatWithFocus.value
-          );
-        });
-      } else if (
-        elementWithFocus === null ||
-        elementWithFocus.tagName !== "TEXTAREA"
-      ) {
-        const firstTextarea = document.querySelector("textarea");
-        if (firstTextarea) {
-          firstTextarea.setRangeText(textButton, 0, 0, "end");
-          updateCurrentTemplateValue(firstTextarea.name, firstTextarea.value);
-        }
-      }
-    }
-  };
-
-  // формирование кнопок с переменными
+  // формирование ряда кнопок с переменными
   const buttonsWithVariables = arrVarNames.map((item) => (
     <ButtonWithVariable
       text={`{${item}}`}
-      onMouseDown={handleDownButtonWithVariable}
+      onMouseDown={(e) =>
+        handleDownButtonWithVariable(e, updateCurrentTemplateValue)
+      }
       key={nanoid()}
     />
   ));
 
-  // обновление значения текстовых полей при их редактировании
-  const handleChangeTextarea = (e: React.FormEvent<HTMLTextAreaElement>) => {
-    updateCurrentTemplateValue(e.currentTarget.name, e.currentTarget.value);
-  };
-
-  // обработка клика на кнопку delete (удаление условного ветвления)
-  const hendleButtonDeleteClick = (
-    e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
-  ) => {
-    // получаем имя текстового поля, который над удаляемым условным ветвлением
-    const nameTopTextarea = (e.currentTarget as HTMLButtonElement).dataset.name;
-    if (nameTopTextarea) {
-      // получаем данные о текстовых полях над и под условным ветвлением
-      const dataTopTexatarea = currentTemplate[nameTopTextarea];
-      const dataBottomTextarea =
-        currentTemplate[dataTopTexatarea.next ? dataTopTexatarea.next : ""];
-      // формируем данные для текстового поля, который будет после удаления условного ветвления
-      const newDataTopTexatarea = {
-        ...dataBottomTextarea,
-        value: dataTopTexatarea.value + dataBottomTextarea.value,
-      };
-      // формируем список имён текстовых полей, данные о которых надо удалить
-      const setTextareaNamesToDelete = new Set<string>();
-      const fillSetTextareaNamesToDelete = (
-        data: IString,
-        next?: string | null
-      ) => {
-        const condition = data.if;
-        const nameBottomTextarea = data.next;
-        if (condition && nameBottomTextarea) {
-          setTextareaNamesToDelete.add(condition[0]);
-          fillSetTextareaNamesToDelete(currentTemplate[condition[0]], next);
-          setTextareaNamesToDelete.add(condition[1]);
-          fillSetTextareaNamesToDelete(currentTemplate[condition[1]], next);
-          setTextareaNamesToDelete.add(condition[2]);
-          fillSetTextareaNamesToDelete(currentTemplate[condition[2]], next);
-          setTextareaNamesToDelete.add(nameBottomTextarea);
-          if (next && data.next !== next) {
-            fillSetTextareaNamesToDelete(
-              currentTemplate[nameBottomTextarea],
-              next
-            );
-          }
-        }
-      };
-      fillSetTextareaNamesToDelete(dataTopTexatarea, dataTopTexatarea.next);
-      // формируем новые данные о шаблоне без удаленной части
-      const newCurrentTemplate = {
-        ...currentTemplate,
-        [nameTopTextarea]: newDataTopTexatarea,
-      };
-      setTextareaNamesToDelete.forEach((item) => {
-        delete newCurrentTemplate[item];
-      });
-      setCcurrentTemplate(newCurrentTemplate);
-    }
-  };
-
-  // формирование редактора сообщения
+  // формирование разметки редактора сообщения
   const makeTemplateMarkup = (dataName: string) => {
     const condition = currentTemplate[dataName].if;
     const [nameIf, nameThen, nameElse] = condition
@@ -155,7 +75,7 @@ const TemplateEditor = ({ arrVarNames, template }: ITemplateEditorProps) => {
       <>
         <Textarea
           name={dataName}
-          value={currentTemplate[dataName].value || dataName}
+          value={currentTemplate[dataName].value}
           changeHandler={handleChangeTextarea}
         />
         {condition && (
@@ -165,7 +85,13 @@ const TemplateEditor = ({ arrVarNames, template }: ITemplateEditorProps) => {
               <Span text="IF" externalStyles={styles.condition} />
               <ButtonDelete
                 dataTextareaName={dataName}
-                onClick={hendleButtonDeleteClick}
+                onClick={(e) =>
+                  handleButtonDeleteClick(
+                    e,
+                    currentTemplate,
+                    setCcurrentTemplate
+                  )
+                }
               />
             </div>
             <div className={styles.conditionText}>
@@ -193,66 +119,13 @@ const TemplateEditor = ({ arrVarNames, template }: ITemplateEditorProps) => {
     return templateMarkup;
   };
 
-  // вставка условного ветвления при нажатии на соответствующую кнопку
-  const handleClickButtonOfCondition = () => {
-    const elementWithFocus = document.activeElement;
-    if (elementWithFocus && elementWithFocus.tagName === "TEXTAREA") {
-      // определяем текстовое поле, на котором будет условное ветвление, и его имя
-      const textareaWithFocus = document.activeElement as HTMLTextAreaElement;
-      const nameOfTextareaWithFocus = textareaWithFocus.name;
-      // распределяем тескт по вновь создаваемым полям
-      const selectionStart = textareaWithFocus.selectionStart;
-      const topValue = textareaWithFocus.value.slice(0, selectionStart);
-      const bottomValue = textareaWithFocus.value.slice(selectionStart);
-      // определяем имена новых полей
-      const nameIf = String(getNewName());
-      const nameThen = String(getNewName());
-      const nameElse = String(getNewName());
-      const nameNext = String(getNewName());
-      // формирование данных о верхней и нижнем текстовых полях
-      const dataOfTopTextarea: IString = {
-        value: topValue,
-        if: [nameIf, nameThen, nameElse],
-        next: nameNext,
-      };
-      const dataOfBottomTextarea: IString = {
-        value: bottomValue,
-        if: currentTemplate[nameOfTextareaWithFocus].if,
-        next: currentTemplate[nameOfTextareaWithFocus].next,
-      };
-
-      const newCurrentTemplate = structuredClone(currentTemplate);
-      newCurrentTemplate[nameOfTextareaWithFocus] = dataOfTopTextarea;
-      newCurrentTemplate[nameIf] = { ...initialDataTextarea };
-      newCurrentTemplate[nameThen] = { ...initialDataTextarea };
-      newCurrentTemplate[nameElse] = { ...initialDataTextarea };
-      newCurrentTemplate[nameNext] = dataOfBottomTextarea;
-      setCcurrentTemplate(newCurrentTemplate);
-    }
-  };
-
   // определение высоты блока с разметкой шаблона
-  const headRef = useRef<HTMLHeadingElement>(null);
-  const buttonsContainerRef = useRef<HTMLDivElement>(null);
-  const buttonConditionRef = useRef<HTMLDivElement>(null);
-  const controlPanelRef = useRef<HTMLDivElement>(null);
-  if (
-    headRef.current &&
-    buttonsContainerRef.current &&
-    buttonConditionRef.current &&
+  determineHeightTemplateBlock(
+    headRef.current,
+    buttonsContainerRef.current,
+    buttonConditionRef.current,
     controlPanelRef.current
-  ) {
-    const hhh =
-      window.innerHeight -
-      (headRef.current.clientHeight +
-        buttonsContainerRef.current.clientHeight +
-        buttonConditionRef.current.clientHeight +
-        controlPanelRef.current.clientHeight);
-    document.documentElement.style.setProperty(
-      "--heightOftemplate",
-      hhh + "px"
-    );
-  }
+  );
 
   return (
     <main className={styles.templateEditor}>
@@ -263,7 +136,15 @@ const TemplateEditor = ({ arrVarNames, template }: ITemplateEditorProps) => {
         {buttonsWithVariables}
       </div>
       <div className={styles.buttonCondition} ref={buttonConditionRef}>
-        <ButtonOfCondition onMouseDown={handleClickButtonOfCondition} />
+        <ButtonOfCondition
+          onMouseDown={() =>
+            handleClickButtonOfCondition(
+              getNewName,
+              currentTemplate,
+              setCcurrentTemplate
+            )
+          }
+        />
       </div>
       <div className={styles.template}>{makeTemplateMarkup("beginning")}</div>
       <div className={styles.controlPanel} ref={controlPanelRef}>
