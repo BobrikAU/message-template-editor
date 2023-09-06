@@ -11,6 +11,8 @@ import { handleDownButtonWithVariable } from "./libs/handlerDownButtonWithVariab
 import { handleButtonDeleteClick } from "./libs/handleButtonDeleteClick";
 import { determineHeightTemplateBlock } from "./libs/determiningHeightTemplateBlock";
 import { handleClickButtonOfCondition } from "./libs/handlerClickButtonOfCondition";
+import { createPortal } from "react-dom";
+import Preview from "../preview";
 
 interface ITemplateEditorProps {
   arrVarNames: string[];
@@ -30,6 +32,8 @@ const TemplateEditor = ({
   const buttonsContainerRef = useRef<HTMLDivElement>(null);
   const buttonConditionRef = useRef<HTMLDivElement>(null);
   const controlPanelRef = useRef<HTMLDivElement>(null);
+
+  const [showPreview, setShowPreview] = useState(false);
 
   // состояние с данными о шаблоне
   const [currentTemplate, setCcurrentTemplate] = useState<IMessage>(
@@ -135,43 +139,54 @@ const TemplateEditor = ({
   );
 
   return (
-    <main className={styles.templateEditor}>
-      <h1 className={styles.head} ref={headRef}>
-        Message Template Editor
-      </h1>
-      <div className={styles.buttonsContainer} ref={buttonsContainerRef}>
-        {buttonsWithVariables}
-      </div>
-      <div className={styles.buttonCondition} ref={buttonConditionRef}>
-        <ButtonOfCondition
-          onMouseDown={() =>
-            handleClickButtonOfCondition(
-              getNewName,
-              currentTemplate,
-              setCcurrentTemplate
-            )
-          }
-        />
-      </div>
-      <div className={styles.template}>{makeTemplateMarkup("beginning")}</div>
-      <div className={styles.controlPanel} ref={controlPanelRef}>
-        <ControlButton
-          text="Preview"
-          onClick={() => {}}
-          externalStyles={styles.controlButton}
-        />
-        <ControlButton
-          text="Save"
-          onClick={() => callbackSave(currentTemplate)}
-          externalStyles={styles.controlButton}
-        />
-        <ControlButton
-          text="Close"
-          onClick={() => setStep && setStep(1)}
-          externalStyles={styles.controlButton}
-        />
-      </div>
-    </main>
+    <>
+      <section className={styles.templateEditor}>
+        <h1 className={styles.head} ref={headRef}>
+          Message Template Editor
+        </h1>
+        <div className={styles.buttonsContainer} ref={buttonsContainerRef}>
+          {buttonsWithVariables}
+        </div>
+        <div className={styles.buttonCondition} ref={buttonConditionRef}>
+          <ButtonOfCondition
+            onMouseDown={() =>
+              handleClickButtonOfCondition(
+                getNewName,
+                currentTemplate,
+                setCcurrentTemplate
+              )
+            }
+          />
+        </div>
+        <div className={styles.template}>{makeTemplateMarkup("beginning")}</div>
+        <div className={styles.controlPanel} ref={controlPanelRef}>
+          <ControlButton
+            text="Preview"
+            onClick={() => setShowPreview(true)}
+            externalStyles={styles.controlButton}
+          />
+          <ControlButton
+            text="Save"
+            onClick={() => callbackSave(currentTemplate)}
+            externalStyles={styles.controlButton}
+          />
+          <ControlButton
+            text="Close"
+            onClick={() => setStep && setStep(1)}
+            externalStyles={styles.controlButton}
+          />
+        </div>
+      </section>
+      {showPreview &&
+        createPortal(
+          <Preview
+            closeWidjet={setShowPreview}
+            template={currentTemplate}
+            arrVarNames={arrVarNames}
+          />,
+          document.body
+        )}
+    </>
   );
 };
 

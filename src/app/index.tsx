@@ -16,7 +16,7 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <main className="App">
       {step === 1 ? (
         <span>1</span>
       ) : step === 2 ? (
@@ -29,7 +29,7 @@ function App() {
       ) : (
         <span>3</span>
       )}
-    </div>
+    </main>
   );
 }
 
