@@ -1,4 +1,4 @@
-import { useState, useRef, Dispatch } from "react";
+import { useState, useRef, Dispatch, useEffect } from "react";
 import { nanoid } from "nanoid";
 import styles from "./index.module.css";
 import { ButtonWithVariable, ButtonOfCondition } from "../../ui/button";
@@ -58,7 +58,15 @@ const TemplateEditor = ({
   };
 
   // счетчик для установления уникальных имен для текстовых полей
-  const refOrdinal = useRef(0);
+  const refOrdinal = useRef<number>(
+    template
+      ? Math.max(
+          ...Object.keys(template)
+            .map((i) => Number.parseInt(i, 10))
+            .filter((i) => !Number.isNaN(i))
+        )
+      : 0
+  );
   const getNewName = () => {
     refOrdinal.current++;
     return refOrdinal.current;
@@ -131,15 +139,23 @@ const TemplateEditor = ({
   };
 
   // определение высоты блока с разметкой шаблона
-  determineHeightTemplateBlock(
-    headRef.current,
-    buttonsContainerRef.current,
-    buttonConditionRef.current,
-    controlPanelRef.current
-  );
+  useEffect(() => {
+    function makeTemplateHeight() {
+      determineHeightTemplateBlock(
+        headRef.current,
+        buttonsContainerRef.current,
+        buttonConditionRef.current,
+        controlPanelRef.current
+      );
+    }
+    makeTemplateHeight();
+    window.addEventListener("resize", makeTemplateHeight);
+    return () => window.removeEventListener("resize", makeTemplateHeight);
+  }, []);
 
   return (
     <>
+      <script>alert(111)</script>
       <section className={styles.templateEditor}>
         <h1 className={styles.head} ref={headRef}>
           Message Template Editor

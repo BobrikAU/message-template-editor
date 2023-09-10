@@ -23,6 +23,7 @@ const Variable = ({ item, values, setValue }: IVariableProps) => {
         onInput={(e) => {
           setValue({ ...values, [item]: e.currentTarget.value });
         }}
+        autoComplete="off"
       />
     </li>
   );

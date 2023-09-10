@@ -4,6 +4,7 @@ import { ControlButton } from "../../ui/button";
 import styles from "./index.module.css";
 import { IMessage } from "../messageData";
 import Variable from "./variable";
+import { messageGenerator } from "./libs/messageGenerator";
 
 interface IPreviewProps {
   closeWidjet: Dispatch<React.SetStateAction<boolean>>;
@@ -48,7 +49,9 @@ const Preview = ({ closeWidjet, arrVarNames, template }: IPreviewProps) => {
     <section className={styles.preview}>
       <div className={styles.previewWidget}>
         <h2 className={styles.header}>Message Preview</h2>
-        <pre className={styles.messageWindow}></pre>
+        <pre className={styles.messageWindow}>
+          {messageGenerator(template, values)}
+        </pre>
         <span className={styles.nameRowWithVariables}>Variables:</span>
         <ul className={styles.variables}>{variables}</ul>
         <ControlButton

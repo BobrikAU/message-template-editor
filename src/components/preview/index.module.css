@@ -47,6 +47,13 @@
   border-radius: 10px;
   grid-area: message;
   align-self: stretch;
+  box-sizing: border-box;
+  padding: 20px;
+  font-family: "Inter";
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.5;
+  white-space: pre-wrap;
 }
 
 .nameRowWithVariables {
