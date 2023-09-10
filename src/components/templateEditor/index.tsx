@@ -155,7 +155,6 @@ const TemplateEditor = ({
 
   return (
     <>
-      <script>alert(111)</script>
       <section className={styles.templateEditor}>
         <h1 className={styles.head} ref={headRef}>
           Message Template Editor
