@@ -1,4 +1,4 @@
-import { useState, useRef, Dispatch } from "react";
+import { useState, useRef, Dispatch, useEffect } from "react";
 import { nanoid } from "nanoid";
 import styles from "./index.module.css";
 import { ButtonWithVariable, ButtonOfCondition } from "../../ui/button";
@@ -11,6 +11,8 @@ import { handleDownButtonWithVariable } from "./libs/handlerDownButtonWithVariab
 import { handleButtonDeleteClick } from "./libs/handleButtonDeleteClick";
 import { determineHeightTemplateBlock } from "./libs/determiningHeightTemplateBlock";
 import { handleClickButtonOfCondition } from "./libs/handlerClickButtonOfCondition";
+import { createPortal } from "react-dom";
+import Preview from "../preview";
 
 interface ITemplateEditorProps {
   arrVarNames: string[];
@@ -30,6 +32,8 @@ const TemplateEditor = ({
   const buttonsContainerRef = useRef<HTMLDivElement>(null);
   const buttonConditionRef = useRef<HTMLDivElement>(null);
   const controlPanelRef = useRef<HTMLDivElement>(null);
+
+  const [showPreview, setShowPreview] = useState(false);
 
   // состояние с данными о шаблоне
   const [currentTemplate, setCcurrentTemplate] = useState<IMessage>(
@@ -54,7 +58,15 @@ const TemplateEditor = ({
   };
 
   // счетчик для установления уникальных имен для текстовых полей
-  const refOrdinal = useRef(0);
+  const refOrdinal = useRef<number>(
+    template
+      ? Math.max(
+          ...Object.keys(template)
+            .map((i) => Number.parseInt(i, 10))
+            .filter((i) => !Number.isNaN(i))
+        )
+      : 0
+  );
   const getNewName = () => {
     refOrdinal.current++;
     return refOrdinal.current;
@@ -127,51 +139,69 @@ const TemplateEditor = ({
   };
 
   // определение высоты блока с разметкой шаблона
-  determineHeightTemplateBlock(
-    headRef.current,
-    buttonsContainerRef.current,
-    buttonConditionRef.current,
-    controlPanelRef.current
-  );
+  useEffect(() => {
+    function makeTemplateHeight() {
+      determineHeightTemplateBlock(
+        headRef.current,
+        buttonsContainerRef.current,
+        buttonConditionRef.current,
+        controlPanelRef.current
+      );
+    }
+    makeTemplateHeight();
+    window.addEventListener("resize", makeTemplateHeight);
+    return () => window.removeEventListener("resize", makeTemplateHeight);
+  }, []);
 
   return (
-    <main className={styles.templateEditor}>
-      <h1 className={styles.head} ref={headRef}>
-        Message Template Editor
-      </h1>
-      <div className={styles.buttonsContainer} ref={buttonsContainerRef}>
-        {buttonsWithVariables}
-      </div>
-      <div className={styles.buttonCondition} ref={buttonConditionRef}>
-        <ButtonOfCondition
-          onMouseDown={() =>
-            handleClickButtonOfCondition(
-              getNewName,
-              currentTemplate,
-              setCcurrentTemplate
-            )
-          }
-        />
-      </div>
-      <div className={styles.template}>{makeTemplateMarkup("beginning")}</div>
-      <div className={styles.controlPanel} ref={controlPanelRef}>
-        <ControlButton
-          text="Preview"
-          onClick={() => {}}
-          externalStyles={styles.controlButton}
-        />
-        <ControlButton
-          text="Save"
-          onClick={() => callbackSave(currentTemplate)}
-          externalStyles={styles.controlButton}
-        />
-        <ControlButton
-          text="Close"
-          onClick={() => setStep && setStep(1)}
-          externalStyles={styles.controlButton}
-        />
-      </div>
-    </main>
+    <>
+      <section className={styles.templateEditor}>
+        <h1 className={styles.head} ref={headRef}>
+          Message Template Editor
+        </h1>
+        <div className={styles.buttonsContainer} ref={buttonsContainerRef}>
+          {buttonsWithVariables}
+        </div>
+        <div className={styles.buttonCondition} ref={buttonConditionRef}>
+          <ButtonOfCondition
+            onMouseDown={() =>
+              handleClickButtonOfCondition(
+                getNewName,
+                currentTemplate,
+                setCcurrentTemplate
+              )
+            }
+          />
+        </div>
+        <div className={styles.template}>{makeTemplateMarkup("beginning")}</div>
+        <div className={styles.controlPanel} ref={controlPanelRef}>
+          <ControlButton
+            text="Preview"
+            onClick={() => setShowPreview(true)}
+            externalStyles={styles.controlButton}
+          />
+          <ControlButton
+            text="Save"
+            onClick={() => callbackSave(currentTemplate)}
+            externalStyles={styles.controlButton}
+          />
+          <ControlButton
+            text="Close"
+            onClick={() => setStep && setStep(1)}
+            externalStyles={styles.controlButton}
+          />
+        </div>
+      </section>
+      {showPreview &&
+        createPortal(
+          <Preview
+            closeWidjet={setShowPreview}
+            template={currentTemplate}
+            arrVarNames={arrVarNames}
+          />,
+          document.body
+        )}
+    </>
   );
 };
 

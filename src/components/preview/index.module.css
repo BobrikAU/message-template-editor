@@ -1,0 +1,86 @@
+.preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: #00000034;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.previewWidget {
+  width: 80%;
+  height: 80vh;
+  background-color: white;
+  border-radius: 20px;
+  box-sizing: border-box;
+  padding: 20px;
+  display: grid;
+  grid-template-rows: 52px 1fr auto auto;
+  grid-template-columns: 200px 1fr;
+  grid-template-areas:
+    "header header"
+    "message message"
+    "rowName variables"
+    "button button";
+  align-items: start;
+  gap: 10px;
+}
+
+.header {
+  color: black;
+  text-align: center;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin: 0;
+  grid-area: header;
+}
+
+.messageWindow {
+  margin: 0;
+  width: 100%;
+  min-height: 100px;
+  border: 2px solid rgb(225, 225, 225);
+  border-radius: 10px;
+  grid-area: message;
+  align-self: stretch;
+  box-sizing: border-box;
+  padding: 20px;
+  font-family: "Inter";
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.nameRowWithVariables {
+  grid-area: rowName;
+  font-weight: 700;
+  font-size: 34px;
+  line-height: 1.5;
+  color: black;
+}
+
+.variables {
+  grid-area: variables;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.variableInput::placeholder {
+  color: gray;
+}
+
+.closeButton {
+  grid-area: button;
+  justify-self: center;
+  padding: 25px 20px;
+  margin-top: 20px;
+}

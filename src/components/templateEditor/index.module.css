@@ -1,6 +1,7 @@
 .templateEditor {
   display: flex;
   flex-direction: column;
+  padding: 0 5px;
 }
 
 .head {
@@ -22,8 +23,14 @@
 }
 
 .buttonCondition {
-  padding: 0 0 20px 400px;
+  padding: 0 0 20px 20%;
   width: fit-content;
+}
+
+@media screen and (max-width: 1000px) {
+  .buttonCondition {
+    padding-left: 0;
+  }
 }
 
 .template {
@@ -35,6 +42,7 @@
   flex-wrap: wrap;
   max-height: var(--heightOftemplate);
   overflow-y: auto;
+  border: 1px solid blue;
 }
 
 .containerConditions {
