@@ -2,9 +2,10 @@ import { useState } from "react";
 import styles from "./index.module.css";
 import TemplateEditor from "../components/templateEditor";
 import { IMessage } from "../components/messageData";
+import { OpenEditorButton } from "../ui/button";
 
 function App() {
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(1);
   const arrVarNames: string[] = localStorage.arrVarNames
     ? JSON.parse(localStorage.arrVarNames)
     : ["firstname", "lastname", "company", "position"];
@@ -16,18 +17,19 @@ function App() {
   };
 
   return (
-    <main className="App">
+    <main className={styles.app}>
       {step === 1 ? (
-        <span>1</span>
-      ) : step === 2 ? (
+        <OpenEditorButton
+          onClick={() => setStep(2)}
+          externalStyles={styles.openEditorButton}
+        />
+      ) : (
         <TemplateEditor
           arrVarNames={arrVarNames}
           template={template}
           setStep={setStep}
           callbackSave={callbackSave}
         />
-      ) : (
-        <span>3</span>
       )}
     </main>
   );
