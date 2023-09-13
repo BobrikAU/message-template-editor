@@ -2,6 +2,12 @@
   display: flex;
   flex-direction: column;
   padding: 0 5px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.schowedTemplateEditor {
+  opacity: 1;
 }
 
 .head {

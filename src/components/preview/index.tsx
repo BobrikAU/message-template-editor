@@ -10,9 +10,17 @@ interface IPreviewProps {
   closeWidjet: Dispatch<React.SetStateAction<boolean>>;
   arrVarNames: string[];
   template: IMessage;
+  isPreviewVisible: boolean;
+  setIsPreviewVisible: Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Preview = ({ closeWidjet, arrVarNames, template }: IPreviewProps) => {
+const Preview = ({
+  closeWidjet,
+  arrVarNames,
+  template,
+  isPreviewVisible,
+  setIsPreviewVisible,
+}: IPreviewProps) => {
   // создаем массив с неизменными id для использования в значении key при создании массива компонентов
   const idsRef = useRef(
     (function () {
@@ -46,7 +54,11 @@ const Preview = ({ closeWidjet, arrVarNames, template }: IPreviewProps) => {
   });
 
   return (
-    <section className={styles.preview}>
+    <section
+      className={`${styles.preview} ${
+        isPreviewVisible && styles.preview_visible
+      }`}
+    >
       <div className={styles.previewWidget}>
         <h2 className={styles.header}>Message Preview</h2>
         <pre className={styles.messageWindow}>
@@ -55,7 +67,10 @@ const Preview = ({ closeWidjet, arrVarNames, template }: IPreviewProps) => {
         <span className={styles.nameRowWithVariables}>Variables:</span>
         <ul className={styles.variables}>{variables}</ul>
         <ControlButton
-          onClick={() => closeWidjet(false)}
+          onClick={() => {
+            setIsPreviewVisible(false);
+            setTimeout(() => closeWidjet(false), 300);
+          }}
           text="Close"
           externalStyles={styles.closeButton}
         />
