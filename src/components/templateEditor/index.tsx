@@ -17,8 +17,11 @@ import Preview from "../preview";
 interface ITemplateEditorProps {
   arrVarNames: string[];
   template?: IMessage | null;
-  setStep?: Dispatch<React.SetStateAction<number>>;
+  setStep: Dispatch<React.SetStateAction<number>>;
+  setIsOpenEditorButtonVisiebel: Dispatch<React.SetStateAction<boolean>>;
   callbackSave: (currentTemplate: IMessage) => void;
+  isTemplateEditorVisible: boolean;
+  setIsTemplateEditorVisible: Dispatch<React.SetStateAction<boolean>>;
 }
 
 const TemplateEditor = ({
@@ -26,6 +29,9 @@ const TemplateEditor = ({
   template,
   setStep,
   callbackSave,
+  setIsOpenEditorButtonVisiebel,
+  isTemplateEditorVisible,
+  setIsTemplateEditorVisible,
 }: ITemplateEditorProps) => {
   // для расчета высоты блока с шаблоном
   const headRef = useRef<HTMLHeadingElement>(null);
@@ -34,6 +40,7 @@ const TemplateEditor = ({
   const controlPanelRef = useRef<HTMLDivElement>(null);
 
   const [showPreview, setShowPreview] = useState(false);
+  const [isPreviewVisible, setIsPreviewVisible] = useState(false);
 
   // состояние с данными о шаблоне
   const [currentTemplate, setCcurrentTemplate] = useState<IMessage>(
@@ -155,7 +162,11 @@ const TemplateEditor = ({
 
   return (
     <>
-      <section className={styles.templateEditor}>
+      <section
+        className={`${styles.templateEditor} ${
+          isTemplateEditorVisible && styles.schowedTemplateEditor
+        }`}
+      >
         <h1 className={styles.head} ref={headRef}>
           Message Template Editor
         </h1>
@@ -177,7 +188,10 @@ const TemplateEditor = ({
         <div className={styles.controlPanel} ref={controlPanelRef}>
           <ControlButton
             text="Preview"
-            onClick={() => setShowPreview(true)}
+            onClick={() => {
+              setShowPreview(true);
+              setTimeout(() => setIsPreviewVisible(true));
+            }}
             externalStyles={styles.controlButton}
           />
           <ControlButton
@@ -187,7 +201,13 @@ const TemplateEditor = ({
           />
           <ControlButton
             text="Close"
-            onClick={() => setStep && setStep(1)}
+            onClick={() => {
+              setIsTemplateEditorVisible(false);
+              setTimeout(() => {
+                setStep(1);
+                setTimeout(() => setIsOpenEditorButtonVisiebel(true));
+              }, 300);
+            }}
             externalStyles={styles.controlButton}
           />
         </div>
@@ -198,6 +218,8 @@ const TemplateEditor = ({
             closeWidjet={setShowPreview}
             template={currentTemplate}
             arrVarNames={arrVarNames}
+            isPreviewVisible={isPreviewVisible}
+            setIsPreviewVisible={setIsPreviewVisible}
           />,
           document.body
         )}
