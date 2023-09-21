@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import { IMessage, initialDataTextarea } from "../../messageData";
+import { IMessage } from "../../messageData";
 import Textarea from "../../../ui/textarea";
 import Span from "../../../ui/span";
 import { ButtonDelete } from "../../../ui/button";
@@ -10,14 +10,16 @@ type MakeTemplateMarkup = (
   dataName: string,
   currentTemplate: IMessage,
   updateCurrentTemplateValue: (nameTextarea: string, newValue: string) => void,
-  setCcurrentTemplate: Dispatch<React.SetStateAction<IMessage>>
+  setCcurrentTemplate: Dispatch<React.SetStateAction<IMessage>>,
+  isPreviewVisible: boolean
 ) => JSX.Element;
 
 const makeTemplateMarkup: MakeTemplateMarkup = (
   dataName,
   currentTemplate,
   updateCurrentTemplateValue,
-  setCcurrentTemplate
+  setCcurrentTemplate,
+  isPreviewVisible
 ) => {
   const condition = currentTemplate[dataName].if;
   const [nameIf, nameThen, nameElse] = condition
@@ -34,6 +36,7 @@ const makeTemplateMarkup: MakeTemplateMarkup = (
         name={dataName}
         value={currentTemplate[dataName].value}
         changeHandler={handleChangeTextarea}
+        disabled={isPreviewVisible}
       />
       {condition && (
         <div className={styles.containerConditions}>
@@ -45,6 +48,7 @@ const makeTemplateMarkup: MakeTemplateMarkup = (
               onClick={(e) =>
                 handleButtonDeleteClick(e, currentTemplate, setCcurrentTemplate)
               }
+              disabled={isPreviewVisible}
             />
           </div>
           <div className={styles.conditionText}>
@@ -52,7 +56,8 @@ const makeTemplateMarkup: MakeTemplateMarkup = (
               nameIf ? nameIf : "",
               currentTemplate,
               updateCurrentTemplateValue,
-              setCcurrentTemplate
+              setCcurrentTemplate,
+              isPreviewVisible
             )}
           </div>
           {/*часть, активная при вычислении в условии true, с текстом или блоком IF-THEN-ELSE*/}
@@ -64,7 +69,8 @@ const makeTemplateMarkup: MakeTemplateMarkup = (
               nameThen ? nameThen : "",
               currentTemplate,
               updateCurrentTemplateValue,
-              setCcurrentTemplate
+              setCcurrentTemplate,
+              isPreviewVisible
             )}
           </div>
           {/*часть, активная при вычислении в условии false, с текстом или блоком IF-THEN-ELSE*/}
@@ -76,7 +82,8 @@ const makeTemplateMarkup: MakeTemplateMarkup = (
               nameElse ? nameElse : "",
               currentTemplate,
               updateCurrentTemplateValue,
-              setCcurrentTemplate
+              setCcurrentTemplate,
+              isPreviewVisible
             )}
           </div>
         </div>
@@ -86,7 +93,8 @@ const makeTemplateMarkup: MakeTemplateMarkup = (
           nameNext,
           currentTemplate,
           updateCurrentTemplateValue,
-          setCcurrentTemplate
+          setCcurrentTemplate,
+          isPreviewVisible
         )}
     </>
   );

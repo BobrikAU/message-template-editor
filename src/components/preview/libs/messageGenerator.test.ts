@@ -1,5 +1,6 @@
 import { messageGenerator } from "./messageGenerator";
 
+// шаблон сообщения
 const template = {
   1: { value: "{company}", if: null, next: null },
   2: { value: "I know you work at {company}", if: ["5", "6", "7"], next: "8" },
@@ -21,11 +22,13 @@ const template = {
   },
 };
 
+// шаблон сообщения со словом в фигурных скобках, которое не входит в массив переменных
 const templateWithUnexpectedVariable = {
   ...template,
   6: { value: " as {position}{friend}.", if: null, next: null },
 };
 
+// значение переменных
 const values = {
   firstname: "Bill",
   lastname: "Gates",
@@ -33,11 +36,13 @@ const values = {
   position: "Co-chair",
 };
 
+// значение переменных без определенния одной переменной
 const valuesWithoutOne = {
   ...values,
   position: "",
 };
 
+// значение переменных без определенния двух переменных
 const valuesWithoutTwo = {
   ...valuesWithoutOne,
   company: "",

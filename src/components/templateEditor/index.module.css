@@ -26,6 +26,8 @@
   gap: 15px;
   flex-direction: row;
   flex-wrap: wrap;
+  margin: 0;
+  list-style: none;
 }
 
 .buttonCondition {
@@ -48,7 +50,7 @@
   flex-wrap: wrap;
   max-height: var(--heightOftemplate);
   overflow-y: auto;
-  border: 1px solid blue;
+  border: 1px solid var(--blue);
 }
 
 .controlPanel {

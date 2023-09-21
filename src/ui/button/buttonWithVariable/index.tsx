@@ -7,6 +7,7 @@ interface IButtonWithVariableProps {
   onMouseDown: (
     e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
   ) => void;
+  disabled: boolean;
 }
 
 /**
@@ -16,6 +17,7 @@ interface IButtonWithVariableProps {
 const ButtonWithVariable = ({
   text,
   onMouseDown,
+  disabled,
   ...props
 }: IButtonWithVariableProps) => (
   <Button
@@ -23,6 +25,7 @@ const ButtonWithVariable = ({
     onMouseDown={onMouseDown}
     {...props}
     externalStyles={styles.button}
+    disabled={disabled}
   />
 );
 

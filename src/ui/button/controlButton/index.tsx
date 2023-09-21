@@ -6,6 +6,7 @@ interface IControlButtonProps {
   text: "Preview" | "Save" | "Close";
   onClick: () => void;
   externalStyles?: string;
+  disabled?: boolean;
 }
 /**
  * Данный функциональный компонент используется для рендеринга кнопок панели уплавления виджета
@@ -16,6 +17,7 @@ const ControlButton = ({
   onClick,
   text,
   externalStyles,
+  disabled,
 }: IControlButtonProps) => {
   let icon = <></>;
   switch (text) {
@@ -38,6 +40,7 @@ const ControlButton = ({
       icon={icon}
       onClick={onClick}
       externalStyles={`${styles.button} ${externalStyles}`}
+      disabled={disabled}
     />
   );
 };

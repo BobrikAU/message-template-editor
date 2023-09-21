@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { HTMLAttributes } from "react";
 import styles from "./index.module.css";
 
@@ -7,6 +7,7 @@ interface ITextareaProps extends HTMLAttributes<HTMLTextAreaElement> {
   changeHandler: (e: React.FormEvent<HTMLTextAreaElement>) => void;
   name: string;
   externalStyles?: string;
+  disabled?: boolean;
 }
 
 /**
@@ -19,6 +20,7 @@ const Textarea = ({
   value,
   changeHandler,
   externalStyles,
+  disabled,
   ...props
 }: ITextareaProps) => {
   const refTextarea = useRef<HTMLTextAreaElement>(null);
@@ -40,6 +42,7 @@ const Textarea = ({
       onInput={changeHandler}
       className={`${styles.textarea} ${externalStyles && externalStyles}`}
       ref={refTextarea}
+      disabled={disabled}
       {...props}
     ></textarea>
   );

@@ -32,7 +32,7 @@ const TemplateEditor = ({
 }: ITemplateEditorProps) => {
   // для расчета высоты блока с шаблоном
   const headRef = useRef<HTMLHeadingElement>(null);
-  const buttonsContainerRef = useRef<HTMLDivElement>(null);
+  const buttonsContainerRef = useRef<HTMLUListElement>(null);
   const buttonConditionRef = useRef<HTMLDivElement>(null);
   const controlPanelRef = useRef<HTMLDivElement>(null);
 
@@ -74,13 +74,15 @@ const TemplateEditor = ({
 
   // формирование ряда кнопок с переменными
   const buttonsWithVariables = arrVarNames.map((item) => (
-    <ButtonWithVariable
-      text={`{${item}}`}
-      onMouseDown={(e) =>
-        handleDownButtonWithVariable(e, updateCurrentTemplateValue)
-      }
-      key={nanoid()}
-    />
+    <li key={nanoid()}>
+      <ButtonWithVariable
+        text={`{${item}}`}
+        onMouseDown={(e) =>
+          handleDownButtonWithVariable(e, updateCurrentTemplateValue)
+        }
+        disabled={isPreviewVisible}
+      />
+    </li>
   ));
 
   // определение высоты блока с разметкой шаблона
@@ -108,9 +110,9 @@ const TemplateEditor = ({
         <h1 className={styles.head} ref={headRef}>
           Message Template Editor
         </h1>
-        <div className={styles.buttonsContainer} ref={buttonsContainerRef}>
+        <ul className={styles.buttonsContainer} ref={buttonsContainerRef}>
           {buttonsWithVariables}
-        </div>
+        </ul>
         <div className={styles.buttonCondition} ref={buttonConditionRef}>
           <ButtonOfCondition
             onMouseDown={() =>
@@ -120,16 +122,18 @@ const TemplateEditor = ({
                 setCcurrentTemplate
               )
             }
+            disabled={isPreviewVisible}
           />
         </div>
-        <div className={styles.template}>
+        <form className={styles.template}>
           {makeTemplateMarkup(
             "beginning",
             currentTemplate,
             updateCurrentTemplateValue,
-            setCcurrentTemplate
+            setCcurrentTemplate,
+            isPreviewVisible
           )}
-        </div>
+        </form>
         <div className={styles.controlPanel} ref={controlPanelRef}>
           <ControlButton
             text="Preview"
@@ -138,11 +142,13 @@ const TemplateEditor = ({
               setTimeout(() => setIsPreviewVisible(true));
             }}
             externalStyles={styles.controlButton}
+            disabled={isPreviewVisible}
           />
           <ControlButton
             text="Save"
             onClick={() => callbackSave(currentTemplate)}
             externalStyles={styles.controlButton}
+            disabled={isPreviewVisible}
           />
           <ControlButton
             text="Close"
@@ -154,6 +160,7 @@ const TemplateEditor = ({
               }, 300);
             }}
             externalStyles={styles.controlButton}
+            disabled={isPreviewVisible}
           />
         </div>
       </section>

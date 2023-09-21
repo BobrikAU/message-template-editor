@@ -7,6 +7,7 @@ interface IButtonDeleteProps {
   onClick: (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => void;
   externalStyles?: string;
   dataTextareaName: string;
+  disabled: boolean;
 }
 
 /**
@@ -16,6 +17,7 @@ const ButtonDelete = ({
   onClick,
   externalStyles,
   dataTextareaName,
+  disabled,
 }: IButtonDeleteProps) => (
   <Button
     icon={<Icon type="trashBasket" width="15" height="15" />}
@@ -23,6 +25,7 @@ const ButtonDelete = ({
     externalStyles={`${styles.button} ${externalStyles && externalStyles}`}
     onClick={onClick}
     data-name={dataTextareaName}
+    disabled={disabled}
   />
 );
 
