@@ -9,6 +9,7 @@ interface IButtonProps extends HTMLAttributes<HTMLButtonElement> {
     e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
   ) => void;
   externalStyles?: string;
+  disabled?: boolean;
 }
 
 /**

@@ -5,6 +5,7 @@ import Span from "../../span";
 interface IButtonOfConditionProps {
   onMouseDown: () => void;
   externalStyles?: string;
+  disabled: boolean;
 }
 
 /**
@@ -13,6 +14,7 @@ interface IButtonOfConditionProps {
 const ButtonOfCondition = ({
   onMouseDown,
   externalStyles,
+  disabled,
 }: IButtonOfConditionProps) => {
   const text = (
     <span>
@@ -26,6 +28,7 @@ const ButtonOfCondition = ({
       text={text}
       onMouseDown={onMouseDown}
       externalStyles={`${styles.button} ${externalStyles}`}
+      disabled={disabled}
     />
   );
 };

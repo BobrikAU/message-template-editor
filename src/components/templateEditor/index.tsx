@@ -2,15 +2,12 @@ import { useState, useRef, Dispatch, useEffect } from "react";
 import { nanoid } from "nanoid";
 import styles from "./index.module.css";
 import { ButtonWithVariable, ButtonOfCondition } from "../../ui/button";
-import Textarea from "../../ui/textarea";
 import { IMessage, initialDataTextarea } from "../messageData";
-import Span from "../../ui/span";
-import { ButtonDelete } from "../../ui/button";
 import { ControlButton } from "../../ui/button";
 import { handleDownButtonWithVariable } from "./libs/handlerDownButtonWithVariable";
-import { handleButtonDeleteClick } from "./libs/handleButtonDeleteClick";
 import { determineHeightTemplateBlock } from "./libs/determiningHeightTemplateBlock";
 import { handleClickButtonOfCondition } from "./libs/handlerClickButtonOfCondition";
+import makeTemplateMarkup from "./libs/makeTemplateMarkup";
 import { createPortal } from "react-dom";
 import Preview from "../preview";
 
@@ -35,7 +32,7 @@ const TemplateEditor = ({
 }: ITemplateEditorProps) => {
   // для расчета высоты блока с шаблоном
   const headRef = useRef<HTMLHeadingElement>(null);
-  const buttonsContainerRef = useRef<HTMLDivElement>(null);
+  const buttonsContainerRef = useRef<HTMLUListElement>(null);
   const buttonConditionRef = useRef<HTMLDivElement>(null);
   const controlPanelRef = useRef<HTMLDivElement>(null);
 
@@ -59,10 +56,6 @@ const TemplateEditor = ({
     newCcurrentTemplate[nameTextarea].value = newValue;
     setCcurrentTemplate(newCcurrentTemplate);
   };
-  // обновление значения текстовых полей при их редактировании
-  const handleChangeTextarea = (e: React.FormEvent<HTMLTextAreaElement>) => {
-    updateCurrentTemplateValue(e.currentTarget.name, e.currentTarget.value);
-  };
 
   // счетчик для установления уникальных имен для текстовых полей
   const refOrdinal = useRef<number>(
@@ -81,69 +74,16 @@ const TemplateEditor = ({
 
   // формирование ряда кнопок с переменными
   const buttonsWithVariables = arrVarNames.map((item) => (
-    <ButtonWithVariable
-      text={`{${item}}`}
-      onMouseDown={(e) =>
-        handleDownButtonWithVariable(e, updateCurrentTemplateValue)
-      }
-      key={nanoid()}
-    />
+    <li key={nanoid()}>
+      <ButtonWithVariable
+        text={`{${item}}`}
+        onMouseDown={(e) =>
+          handleDownButtonWithVariable(e, updateCurrentTemplateValue)
+        }
+        disabled={isPreviewVisible}
+      />
+    </li>
   ));
-
-  // формирование разметки редактора сообщения
-  const makeTemplateMarkup = (dataName: string) => {
-    const condition = currentTemplate[dataName].if;
-    const [nameIf, nameThen, nameElse] = condition
-      ? condition
-      : [null, null, null];
-    const nameNext = currentTemplate[dataName].next;
-    const templateMarkup: JSX.Element = (
-      <>
-        <Textarea
-          name={dataName}
-          value={currentTemplate[dataName].value}
-          changeHandler={handleChangeTextarea}
-        />
-        {condition && (
-          <div className={styles.containerConditions}>
-            {/*часть, вычисляющая булевый результат условия, с текстом или блоком IF-THEN-ELSE*/}
-            <div className={styles.conditionLabel}>
-              <Span text="IF" externalStyles={styles.condition} />
-              <ButtonDelete
-                dataTextareaName={dataName}
-                onClick={(e) =>
-                  handleButtonDeleteClick(
-                    e,
-                    currentTemplate,
-                    setCcurrentTemplate
-                  )
-                }
-              />
-            </div>
-            <div className={styles.conditionText}>
-              {makeTemplateMarkup(nameIf ? nameIf : "")}
-            </div>
-            {/*часть, активная при вычислении в условии true, с текстом или блоком IF-THEN-ELSE*/}
-            <div className={styles.conditionLabel}>
-              <Span text="THEN" externalStyles={styles.then} />
-            </div>
-            <div className={styles.conditionText}>
-              {makeTemplateMarkup(nameThen ? nameThen : "")}
-            </div>
-            {/*часть, активная при вычислении в условии false, с текстом или блоком IF-THEN-ELSE*/}
-            <div className={styles.conditionLabel}>
-              <Span text="ELSE" externalStyles={styles.else} />
-            </div>
-            <div className={styles.conditionText}>
-              {makeTemplateMarkup(nameElse ? nameElse : "")}
-            </div>
-          </div>
-        )}
-        {nameNext && makeTemplateMarkup(nameNext)}
-      </>
-    );
-    return templateMarkup;
-  };
 
   // определение высоты блока с разметкой шаблона
   useEffect(() => {
@@ -170,9 +110,9 @@ const TemplateEditor = ({
         <h1 className={styles.head} ref={headRef}>
           Message Template Editor
         </h1>
-        <div className={styles.buttonsContainer} ref={buttonsContainerRef}>
+        <ul className={styles.buttonsContainer} ref={buttonsContainerRef}>
           {buttonsWithVariables}
-        </div>
+        </ul>
         <div className={styles.buttonCondition} ref={buttonConditionRef}>
           <ButtonOfCondition
             onMouseDown={() =>
@@ -182,9 +122,18 @@ const TemplateEditor = ({
                 setCcurrentTemplate
               )
             }
+            disabled={isPreviewVisible}
           />
         </div>
-        <div className={styles.template}>{makeTemplateMarkup("beginning")}</div>
+        <form className={styles.template}>
+          {makeTemplateMarkup(
+            "beginning",
+            currentTemplate,
+            updateCurrentTemplateValue,
+            setCcurrentTemplate,
+            isPreviewVisible
+          )}
+        </form>
         <div className={styles.controlPanel} ref={controlPanelRef}>
           <ControlButton
             text="Preview"
@@ -193,11 +142,13 @@ const TemplateEditor = ({
               setTimeout(() => setIsPreviewVisible(true));
             }}
             externalStyles={styles.controlButton}
+            disabled={isPreviewVisible}
           />
           <ControlButton
             text="Save"
             onClick={() => callbackSave(currentTemplate)}
             externalStyles={styles.controlButton}
+            disabled={isPreviewVisible}
           />
           <ControlButton
             text="Close"
@@ -209,6 +160,7 @@ const TemplateEditor = ({
               }, 300);
             }}
             externalStyles={styles.controlButton}
+            disabled={isPreviewVisible}
           />
         </div>
       </section>

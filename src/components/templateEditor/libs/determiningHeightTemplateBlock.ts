@@ -1,6 +1,6 @@
 type TDetermineHeightTemplateBlock = (
   headRef: HTMLHeadingElement | null,
-  buttonsContainerRef: HTMLDivElement | null,
+  buttonsContainerRef: HTMLUListElement | null,
   buttonConditionRef: HTMLDivElement | null,
   controlPanelRef: HTMLDivElement | null
 ) => void;

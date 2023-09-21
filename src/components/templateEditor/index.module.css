@@ -26,6 +26,8 @@
   gap: 15px;
   flex-direction: row;
   flex-wrap: wrap;
+  margin: 0;
+  list-style: none;
 }
 
 .buttonCondition {
@@ -48,33 +50,7 @@
   flex-wrap: wrap;
   max-height: var(--heightOftemplate);
   overflow-y: auto;
-  border: 1px solid blue;
-}
-
-.containerConditions {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-.conditionLabel {
-  width: 210px;
-  display: flex;
-  align-items: flex-start;
-  padding-top: 10px;
-}
-
-.condition {
-  margin-right: 59px;
-}
-
-.conditionText {
-  width: calc(100% - 210px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 10px 0;
+  border: 1px solid var(--blue);
 }
 
 .controlPanel {

@@ -1,5 +1,6 @@
 @import "./assets/fonts/index.css";
 @import "./assets/styles/normalize.css";
+@import "./assets/styles/variables/index.css";
 
 body {
   margin: 0;
@@ -8,9 +9,4 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
 }

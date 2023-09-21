@@ -5,7 +5,7 @@ export function messageGenerator(
   template: IMessage,
   values: { [name: string]: string }
 ): string {
-  // обработка текстовой части объекта шаблона - нахождение переменных и вставка их значений
+  // обработка текста части шаблона - нахождение переменных и вставка их значений
   const editText = (partOfTemplate: IString) => {
     const regExp = /\{[\wа-яА-ЯёЁ\s]+\}/gi;
     let text = partOfTemplate.value;

@@ -32,7 +32,7 @@ const Preview = ({
     })()
   );
 
-  // объект со значениями переменных
+  // создаем объект, в котором мы будем сохранять набираемые пользователем значения переменных
   const initialValue: { [name: string]: string } = {};
   arrVarNames.forEach((item) => {
     initialValue[item] = "";
@@ -41,7 +41,7 @@ const Preview = ({
     initialValue
   );
 
-  // поля для ввода значений переменных
+  // массив полей для ввода значений переменных
   const variables = arrVarNames.map((item, index) => {
     return (
       <Variable
@@ -52,6 +52,11 @@ const Preview = ({
       />
     );
   });
+
+  const handleClickCloseButton = () => {
+    setIsPreviewVisible(false);
+    setTimeout(() => closeWidjet(false), 300);
+  };
 
   return (
     <section
@@ -67,10 +72,7 @@ const Preview = ({
         <span className={styles.nameRowWithVariables}>Variables:</span>
         <ul className={styles.variables}>{variables}</ul>
         <ControlButton
-          onClick={() => {
-            setIsPreviewVisible(false);
-            setTimeout(() => closeWidjet(false), 300);
-          }}
+          onClick={handleClickCloseButton}
           text="Close"
           externalStyles={styles.closeButton}
         />
