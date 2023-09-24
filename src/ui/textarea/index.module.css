@@ -1,0 +1,16 @@
+.textarea {
+  width: calc(100% - 24px);
+  resize: none;
+  min-height: 18px;
+  padding: 7px 10px 7px;
+  border: 2px solid rgb(225, 225, 225);
+  border-radius: 10px;
+  outline-color: gray;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.textarea:focus {
+  border-color: gray;
+}

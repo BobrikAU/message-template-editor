@@ -1,0 +1,39 @@
+.variable {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 32%;
+  cursor: pointer;
+  border: 2px solid var(--lightgrey);
+  padding: 0 10px;
+}
+
+.variable:has(input:focus-visible) {
+  border-color: var(--darkblue);
+}
+
+@media screen and (max-width: 1440px) {
+  .variable {
+    width: 49%;
+  }
+}
+
+.variableLabel {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--lightgrey);
+}
+
+.variableInput {
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--black);
+  border: none;
+  outline: none;
+}
+
+.variableInput::placeholder {
+  color: var(--grey);
+}

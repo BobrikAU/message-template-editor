@@ -1,0 +1,25 @@
+.button {
+  font-size: 14px;
+  box-sizing: border-box;
+  padding: 5px 10px;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 6px 6px 6px 0 rgb(186, 183, 183);
+  transition: box-shadow 100ms;
+  cursor: pointer;
+  border: 2px solid gray;
+}
+
+.button:active {
+  box-shadow: 2px 2px 2px 0 rgb(186, 183, 183);
+  transform: translateY(3px);
+}
+
+.button:focus {
+  outline: 2px solid rgb(13, 50, 232);
+  outline-offset: 2px;
+}
+
+.span {
+  margin-left: 5px;
+}
