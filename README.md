@@ -60,7 +60,9 @@ Folgende Technologien wurden bei der Projektentwicklung verwendet:
 Dem Benutzer ermöglichen, die Liste der im Nachrichtenvorlagen-Editor verwendenden Variablen selbst zu definieren.\
 Die Möglichkeit entwickeln, mehrere Vorlagen zu speichern und beim Laden des Editors eine Vorlage auszuwählen.\
 Ein Problem tritt auf. Beim Tippen kann sich die Vorlage automatisch nach oben scrollen. Das gibt es, wenn unten genannte Voraussetzungen gleichzeitig sind:\
-eine Vorlage nimmt mehr Platz als der verfügbare Anwendungsfenster ein und ist nach unten gescrollt und der untere Rand des letzten Textblocks sichtbar ist;\
-der letzten Textblock hat mehrere Zeilen;\
-man tippt in dem letzten Textblock.\
+
+- eine Vorlage nimmt mehr Platz als der verfügbare Anwendungsfenster ein und ist nach unten gescrollt und der untere Rand des letzten Textblocks sichtbar ist;\
+- der letzten Textblock hat mehrere Zeilen;\
+- man tippt in dem letzten Textblock.\
+
 Nach dem automatischen Scrollen kann man die Zeile sehen, in der man tippt. Aber unten befindete Zeilen geraten außerhalb des Fensters und sind beim Tippen unsichtbar. Man kann zwar weiterhin tippen, aber der Text darunter ist nicht mehr sichtbar, was unbequem und als Problem bewertet ist.
