@@ -1,59 +1,66 @@
 # message-template-editor
 
-Редактор шаблонов сообщений - тестовое задание.
+[Русский](README.ru.md)
 
-Цель тестового задания - разработка редактора шаблонов сообщений и виджета предпросмотра сообщений. Пользователь должен иметь возможность с помощью текстовых полей и кнопок формировать шаблон сообщений, который содержит перменные, а также условные ветвления (по типу если-то-иначе: IF - THEN - ELSE). С помощью этого шаблона пользователь может автоматизировать создание стандартных писем, содержание которых будет зависеть от того, каким именно переменным присваивается значение, а каким нет (какая информация имеется). Проверить работу шаблона можно с помощью виджета предпросмотра сообщения, где пользователь может присвоить переменным определенное значение, после чего сразу формируется итоговое сообщение.\
-В настоящее время шаблон сообщения сохраняется в локальном хранилище браузера и загружается оттуда. При отсутствии шаблона в локальном хранилище, шаблон будет состоять из одного текстового поля, кнопок для вставки переменных и условного ветвления. Его можно заполнять текстом с переменными и разбивать на несколько полей, делая условные ветвления.\
-Набор переменных в настоящее время ограничен и заранее определен (пользователем редактироваться не может).
+Nachrichtenvorlagen-Editor – Testaufgabe.
 
-При загрузке web-приложения появляется кнопка `Message Editor`. Нажатие на эту кнопку открывает редактор шаблона сообщения с кнопками вставки переменных, условного ветвления, кнопками управления редактором.
+Das Ziel dieser Testaufgabe ist die Entwicklung eines Nachrichtenvorlagen-Editors und eines Nachrichten-Vorschau-Widgets. Der Benutzer soll mithilfe von Textfeldern und Schaltflächen eine Nachrichtenvorlage mit Variablen und bedingten Verzweigungen (WENN-DANN-SONST) erstellen können. Mit dieser Vorlage kann der Benutzer die Erstellung von Standard-Nachrichten automatisieren. Der Inhalt der Nachrichten hängt davon ab, welchen Variablen Werte zugewiesen werden und welchen nicht (welche Informationen verfügbar sind). Die Vorlage kann mithilfe des Nachrichten-Vorschau-Widgets getestet werden. Hier kann der Benutzer den Variablen Werte zuweisen, woraufhin die endgültige Nachricht sofort generiert wird.\
+Aktuell wird die Nachrichtenvorlage im lokalen Speicher des Browsers gespeichert und von dort geladen. Wenn es keine gespeicherte Vorlage im lokalen Speicher gibt, besteht die Vorlage aus einem einzelnen Textfeld, Schaltflächen zum Einfügen von Variablen und bedingten Verzweigungen. Sie kann mit Text und Variablen gefüllt und in mehrere Felder aufgeteilt werden, um bedingte Verzweigungen zu ermöglichen.\
+Der Variablensatz ist derzeit begrenzt und vordefiniert (nicht vom Benutzer bearbeitbar).
 
-## Переменные
+Nach dem Laden der Webanwendung erscheint die Schaltfläche `Message Editor`. Durch Klicken auf diese Schaltfläche wird der Nachrichtenvorlagen-Editor geöffnet, der Schaltflächen zum Einfügen von Variablen, bedingten Verzweigungen und Steuerungsschaltflächen für den Editor enthält.
 
-Поставте в редакторе шаблона сообщений курсор в место, где необходимо вставить переменную, и нажмите кнопку с соответствующим имененем переменной. В шаблоне появиться переменная в виде её названия, окруженного с обеих сторон фигурными скобками.\
-В виджете предпросмотра сообщения первоначальное значение переменной - пустая строка (без какого-либо содержания).
-В полях редактора шаблона сообщения и в виджете предпросмотра сообщения могут быть использованы только те переменные, которые указаны в кнопках переменных редактора сообщений. Если пользователь с помощью клавиатуры введет в текстовое поле редактора слово, окружённое фигурными скобками, которое отсутствует в кнопках с переменными, то это не приведет к установлению новой переменой. При обработке шаблона сообщения данное слово вместе со скобками будет воспринято обработчиком как обычный текст без каких-либо изменений. В виджете предпросмотра сообщения не будет возможность придать такому слову какое-либо значение как переменной.
+## Variablen
 
-## Условное ветвление
+Platzieren Sie im Nachrichtenvorlagen-Editor den Cursor an der gewünschten Stelle, wo der Text von der Bedeutung der Variable abhängig sein soll, und klicken Sie auf die Schaltfläche mit dem entsprechenden Variablennamen. Die Variable erscheint in der Vorlage mit ihrem in geschweifte Klammern eingeschlossenen Namen.\
+Die Bedeutungen der Variablen können nur mit speziellen Textflächen im Nachrichten-Vorschau-Widget bestimmt werden. Zuerst haben die Variable keine Bedeutung.\
+Im Nachrichtenvorlagen-Editor können nur Variablen benutzt werden, deren Variable-Schaltflächen es im Editor gibt. Wenn der Benutzer mit der Tastatur in das Textfeld des Editors ein anderes Wort in geschweiften Klammern eingibt, wird keine neue Variable erstellt. Nach der Verarbeitung wird dieses Wort zusammen mit den Klammern unverändert als ein Text im Nachrichten-Vorschau-Widget gezeigt. Im Nachrichten-Vorschau-Widget kann keine Bedeutung für dieses Wort als Variable festgestellt werden.
 
-Поставте в редакторе шаблона сообщений курсор в место, где содержание сообщения должно зависеть от условия. Нажмите кнопку вставки условного ветвления. Поле, где находился курсор, будет разбито на две части. Текст, который был слева и выше от курсора, останется в текущем поле. Текст, который был справа и ниже курсора, перенесётся в новое текстовое поле, которое будет ниже. Между этими двумя полями будут сформированы ещё три текстовых поля:
+## Bedingte Verzweigung
 
-- поле IF: предназначено для формирования условия. Условие считается выполненным, если после применения переменных в данном поле будет какой-либо текст. Условие считается невыполненным, если после применения переменных в данном поле будет пустая строка (отсутствуют какие-либо символы, в том числе пробелы). Например, если в поле IF будет втсавлена переменная {name}, и в виджете предпросмотра сообщения данной переменной будет дано какое-либо значение, то будет считаться, что условие соблюдается, и будет выведено содержание поля THEN. Если переменной {name} значение придано не будет, то будет выведено содержание поля ELSE. Если помимо переменной в поле IF будет ещё какой-либо текст, то условие будет считаться выполненным независимо от придания переменной значения, так как имеется текст, наличие которого не зависит от того, определена перменная или не определена;\
-- поле THEN: здесь набирается текст, который выводится в случае если в поле IF отсутствует пустая строка;\
-- поле ELSE: здесь набирается текст, который выводится в случае если в поле IF будет находиться пустая строка.
+Platzieren Sie im Nachrichtenvorlagen-Editor den Cursor an der Stelle, an der der Nachrichteninhalt von der Bedingung abhängen soll. Klicken Sie auf die Schaltfläche `Click to add...`. Das Feld, in dem sich der Cursor befindet, wird in zwei Teile geteilt. Der Text links und oberhalb des Cursors bleibt im aktuellen Feld. Der Text rechts und unterhalb des Cursors wird in ein neues Textfeld darunter verschoben. Zwischen diesen beiden Feldern werden drei weitere Textfelder erstellt:
 
-При нажатии на кнопку `Delete` условное ветвление, внутри которого кнопка находится, удаляется. При этом из шаблона удаляются поля IF, THEN и ELSE. Поля, которые находятся над и под этим ветвлением, соединяются в одно с соединением их текстового содержимого.
+- IF-Feld: Dieses Feld dient zum Erstellen einer Bedingung. Die Bedingung gilt als erfüllt, wenn der Text in diesem Feld nach Anwendung der Variablen vorhanden ist. Die Bedingung gilt als nicht erfüllt, wenn das Feld nach Anwendung der Variablen leer ist (ohne Text). Beispiel: Wenn die Variable {name} in das IF-Feld eingefügt ist und die Bedeutung dieser Variable im Nachrichtenvorschau-Widget bestimmt wird, gilt die Bedingung als erfüllt und wird der Inhalt des THEN-Felds angezeigt. Wenn keine Bedeutung der Variable bestimmt wird, wird der Inhalt des ELSE-Felds angezeigt. Wenn ein Text neben den Variablen im IF-Feld vorhanden ist, gilt die Bedingung als erfüllt und es hängt nicht davon ab, ob eine Bedeutung der Variable bestimmt ist, da der Text vorhanden ist. Deswegen ist es empfohlen, nur Variablen im IF-Feld zu benutzen.
+- THEN-Feld: Geben Sie den Text ein, der angezeigt werden soll, wenn das IF-Feld nicht leer ist.
+- ELSE-Feld: Geben Sie den Text ein, der angezeigt werden soll, wenn das IF-Feld leer ist.
 
-## Кнопки управления редактором шаблона сообщения
+Wenn Sie auf die Schaltfläche „Delete“ klicken, wird die bedingte Verzweigung, in der sich die Schaltfläche befindet, gelöscht. Dadurch werden auch die IF-, THEN- und ELSE-Felder aus der Vorlage entfernt. Die Felder oberhalb und unterhalb dieser Verzweigung werden zu einem Feld zusammengeführt, wobei ihre Textinhalte vereint werden.
 
-`Preview` - кнопка вызова виджета предварительного просмотра сообщения. Окно с виджетом открывается поверх редактора шаблона сообщения. Работа с шаблоном при этом невозможна.\
-`Save` - сохранение текущего шаблона в локальное хранилище браузера.\
-`Close` - закрытие редактора шаблона сообщения.
+## Steuerelemente des Nachrichtenvorlagen-Editors
 
-## Виджет предварительного просмотра сообщения
+`Preview` – Diese Schaltfläche öffnet das Nachrichtenvorschau-Widget. Das Widget-Fenster wird über dem Nachrichtenvorlagen-Editor geöffnet. Die Arbeit an der Vorlage ist währenddessen nicht möglich.\
+`Save` – Diese Schaltfläche speichert die aktuelle Vorlage im lokalen Speicher des Browsers.\
+`Close` – Diese Schaltfläche schließt den Nachrichtenvorlagen-Editor.
 
-Позволяет проверить работу шаблона сообщения. При загрузке виджета пользователь первоначально видит сообщение, которое должно быть, если все переменные не определены. В виджете пользователь может придать переменным необходимое значение (в виде строки) и проверить, как изменилось сообщение. Текст сообщения меняется "на лету".\
-В виджете обрабатывается текущий шаблон сообщения с учётом изменений, которые были сделаны в редакторе, даже если они не сохранены в локальном хранилище браузера.\
-Кнопка `Close` виджета закрывает виджет предварительного просмотра сообщения.
+## Widget für die Nachrichtenvorschau
 
-## Команды проекта
+Mit diesem Widget können Sie die Nachrichtenvorlage testen. Beim Laden des Widgets sieht der Benutzer zunächst die Nachricht, die erscheinen muss, wenn alle Variablen undefiniert sind. Im Widget kann der Benutzer die gewünschten Bedeutungen der Variablen (als Text) bestimmen und die Änderungen der Nachricht überprüfen. Der Nachrichtentext ändert sich in Echtzeit.\
+Das Widget verarbeitet die aktuelle Nachrichtenvorlage und berücksichtigt dabei die im Editor vorgenommenen Änderungen, auch wenn diese nicht im lokalen Speicher des Browsers gespeichert werden.\
+Über die Schaltfläche `Close` im Widget wird die Nachrichtenvorschau geschlossen.
 
-Находясь в каталоге проекта можно запустить следующие команды:
+## Projektbefehle
 
-- `npm start`: запуск приложения в режиме разработки. Приложение откроется в браузере по адресу: [http://localhost:3000](http://localhost:3000). При внесении изменений в файлы проекта и их сохранении, изменения будут автоматически отражаться в браузере;\
-- `npm test`: запуск автоматического тестирования. В настоящее время в проекте осуществлено 100%-е покрытие тестами функции, которая обрабытывает шаблон приложения и с учётом определенных переменных формирует итоговый текст сообщения. Проверить уровень покрытия тестами можно с помощью команды `npm test -- --coverage --watchAll`;\
-- `npm run build`: создание файлов приложения для дальнейшего деплоя. Файлы будут собраны в папке `build`.\
+Im Ordner des Projektes können Sie die folgenden Befehle ausführen:
 
-## Использованные технологии
+- `npm start`: Das Starten der Anwendung im Entwicklungsmodus. Die Anwendung öffnet sich im Browser unter der Adresse [http://localhost:3000] (http://localhost:3000). Änderungen an den Projektdateien werden nach dem Speichern automatisch im Browser angezeigt.
+- `npm test` : Das Starten der automatisierten Tests. Das Projekt bietet derzeit Tests der Funktion, die die Nachrichtenvorlage verarbeitet und anhand bestimmter Variablen den endgültigen Nachrichtentext generiert. Sie können den Testabdeckungsgrad mit dem Befehl `npm test -- --coverage --watchAll` überprüfen.
+- `npm run build`: die Erstellung Anwendungsdateien für die Betriebsverteilung. Die Dateien werden im `build`-Ordner kompiliert.
 
-При разработке проекта использовались следующие технологии:
+## Verwendete Technologien
 
-- React\
-- Typescript
+Folgende Technologien wurden bei der Projektentwicklung verwendet:
 
-Для настройки окружения использован create-react-app
+- React
+- TypeScript
 
-## Запланированные доработки
+`create-react-app` wurde zur Einrichtung der Umgebung verwendet.
 
-Предоставить пользователю возможность самостоятельно определять перечень переменных, которые будут использоваться в редакторе шаблона сообщения.
-Разработать возможность сохранять несколько шаблонов и возможность выбрать шаблон при загрузке редактора.
+## Geplante Verbesserungen
+
+Dem Benutzer ermöglichen, die Liste der im Nachrichtenvorlagen-Editor verwendenden Variablen selbst zu definieren.\
+Die Möglichkeit entwickeln, mehrere Vorlagen zu speichern und beim Laden des Editors eine Vorlage auszuwählen.\
+Ein Problem tritt auf. Beim Tippen kann sich die Vorlage automatisch nach oben scrollen. Das gibt es, wenn unten genannte Voraussetzungen gleichzeitig sind:\
+eine Vorlage nimmt mehr Platz als der verfügbare Anwendungsfenster ein und ist nach unten gescrollt und der untere Rand des letzten Textblocks sichtbar ist;\
+der letzten Textblock hat mehrere Zeilen;\
+man tippt in dem letzten Textblock.\
+Nach dem automatischen Scrollen kann man die Zeile sehen, in der man tippt. Aber unten befindete Zeilen geraten außerhalb des Fensters und sind beim Tippen unsichtbar. Man kann zwar weiterhin tippen, aber der Text darunter ist nicht mehr sichtbar, was unbequem und als Problem bewertet ist.
